@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LiveGreater Magazine</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<link rel="stylesheet" href="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\css codes\index.css">
+</head>
+
+<body>
+
+<div class="bg-overlay"></div>
+
+<header>
+  <div class="logo">
+    <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg">
+    <h1>
+      <span class="black">LiveGreater</span>
+      <span class="purple">Magazine</span>
+    </h1>
+  </div>
+
+  <nav>
+    <a href="index.html" class="active">Home</a>
+    <a href="inspiration.html">Inspiration</a>
+    <a href="health.html">Health</a>
+    <a href="sports.html">Sports</a>
+    <a href="influence.html">Influence</a>
+    <a href="entrepreneurship.html">Entrepreneurship</a>
+    <a href="Lifestyle.html">Lifestyle</a>
+    <a href="fashionart.html">Fashion & Art</a>
+  </nav>
+</header>
+
+<section class="intro">
+  <h2>LiveGreater.</h2>
+  <div class="accent-line"></div>
+  <p>
+    A digital magazine built to inspire growth, elevate mindset,
+    and spotlight stories that move culture forward.
+  </p>
+</section>
+
+<section class="exclusive">
+  <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\exclusive.JPG">
+  <div class="exclusive-text">
+    <h3>Exclusive Feature</h3>
+    <p>
+      Inside the minds of creators, leaders, and visionaries shaping the future.
+    </p>
+    <button class="primary-btn">Read Exclusive</button>
+  </div>
+</section>
+
+<section class="slider-section">
+
+  <button class="arrow left" onclick="slideLeft()">&#10094;</button>
+
+  <div class="slider-window">
+    <div class="slider-track" id="sliderTrack">
+
+      <div class="card">
+        <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\insp1.JPG">
+        <h4>Inspiration</h4>
+        <p>Stories that push you forward.</p>
+      </div>
+
+      <div class="card">
+        <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\health.jpg">
+        <h4>Health</h4>
+        <p>Mind, body & balance.</p>
+      </div>
+
+      <div class="card">
+        <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\sport.jpg">
+        <h4>Sports</h4>
+        <p>Discipline, grind, greatness.</p>
+      </div>
+
+      <div class="card">
+        <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\lifefstyle1.JPG">
+        <h4>Lifestyle</h4>
+        <p>The art of living.</p>
+      </div>
+
+      <div class="card">
+        <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\exclusive.JPG">
+        <h4>Exclusive</h4>
+        <p>Premium stories only.</p>
+      </div>
+
+    </div>
+
+    <div class="progress-bar">
+      <div class="progress"></div>
+    </div>
+
+  </div>
+
+  <button class="arrow right" onclick="slideRight()">&#10095;</button>
+
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="#">Home</a>
+    <a href="#">About Us</a>
+    <a href="#">Services</a>
+    <a href="#">Portfolio</a>
+    <a href="#">Contact Us</a>
+  </div>
+
+  <div class="socials">
+    <i class="fab fa-facebook-f"></i>
+    <i class="fab fa-instagram"></i>
+    <i class="fab fa-tiktok"></i>
+  </div>
+</footer>
+
+<script src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\JS codes\index.js"></script>
+</body>
+</html>
