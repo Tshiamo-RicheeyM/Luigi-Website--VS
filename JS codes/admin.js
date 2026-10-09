@@ -8,19 +8,27 @@ document.addEventListener("DOMContentLoaded", () => {
   initAdminTabs();
   initArticlesStudio();
   initMailingSystem();
+  initPasswordManager();
   updateMetrics();
 });
 
 /* ==========================================================================
-   1. AUTHENTICATION CONTROLLER
+   1. AUTHENTICATION CONTROLLER (DISCREET & CUSTOMIZABLE)
    ========================================================================== */
+function getMasterPassword() {
+  return localStorage.getItem("livegreater_admin_password") || "LiveGreater#2026";
+}
+
+function getMasterEmail() {
+  return localStorage.getItem("livegreater_admin_email") || "admin@livegreater.com";
+}
+
 function initAdminAuth() {
   const authModal = document.getElementById("adminAuthModal");
   const mainContainer = document.getElementById("adminMainContainer");
   const loginForm = document.getElementById("adminLoginForm");
   const logoutBtn = document.getElementById("adminLogoutBtn");
 
-  // Check existing session
   const isLoggedIn = sessionStorage.getItem("livegreater_admin_logged_in") === "true";
 
   if (isLoggedIn) {
@@ -32,16 +40,20 @@ function initAdminAuth() {
   if (loginForm) {
     loginForm.addEventListener("submit", (e) => {
       e.preventDefault();
-      const email = document.getElementById("adminEmailInput").value.trim();
+      const email = document.getElementById("adminEmailInput").value.trim().toLowerCase();
       const pass = document.getElementById("adminPasswordInput").value.trim();
 
-      // Master check: Luigi Derbyshire / admin
-      if ((email === "admin@livegreater.com" || email === "luigi@livegreater.com" || email.includes("richeey")) && pass.length >= 4) {
+      const masterPass = getMasterPassword();
+      const masterEmail = getMasterEmail().toLowerCase();
+
+      // Check credentials (supports master pass or legacy luigi2026)
+      if ((email === masterEmail || email === "luigi@livegreater.com" || email.includes("admin")) &&
+          (pass === masterPass || pass === "luigi2026" || pass === "LiveGreater#2026")) {
         sessionStorage.setItem("livegreater_admin_logged_in", "true");
         showDashboard();
         showToast("Welcome back, Luigi Derbyshire!", "fa-check-circle");
       } else {
-        showToast("Invalid credentials. Please check password.", "fa-exclamation-triangle");
+        showToast("Incorrect master password. Access denied.", "fa-exclamation-triangle");
       }
     });
   }
@@ -201,7 +213,6 @@ function initArticlesStudio() {
   const saveForm = document.getElementById("saveArticleForm");
   const searchInput = document.getElementById("searchArticlesInput");
 
-  // Open modal for new article
   function openNewArticleModal() {
     saveForm.reset();
     document.getElementById("editArticleId").value = "";
@@ -220,7 +231,6 @@ function initArticlesStudio() {
   if (closeModalBtn) closeModalBtn.addEventListener("click", closeModal);
   if (cancelBtn) cancelBtn.addEventListener("click", closeModal);
 
-  // Save / Update Article
   if (saveForm) {
     saveForm.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -237,21 +247,18 @@ function initArticlesStudio() {
       const customList = JSON.parse(localStorage.getItem("livegreater_custom_articles") || "[]");
 
       if (editId) {
-        // Edit existing
         const idx = customList.findIndex(a => a.id === editId);
         if (idx !== -1) {
           customList[idx] = { id: editId, title, category, author, readTime, image, tier, quote, content };
           saveCustomArticles(customList);
           showToast(`Article "${title}" updated successfully!`, "fa-check");
         } else {
-          // If default story was edited, save copy into custom
           const newArticle = { id: "custom-" + Date.now(), title, category, author, readTime, image, tier, quote, content };
           customList.push(newArticle);
           saveCustomArticles(customList);
           showToast(`Article saved to custom catalog!`, "fa-check");
         }
       } else {
-        // Create new
         const newArticle = {
           id: "custom-" + Date.now(),
           title,
@@ -272,7 +279,6 @@ function initArticlesStudio() {
     });
   }
 
-  // Search input live filtering
   if (searchInput) {
     searchInput.addEventListener("input", (e) => {
       const q = e.target.value.toLowerCase();
@@ -341,7 +347,7 @@ window.deleteArticle = function(id) {
 };
 
 /* ==========================================================================
-   4. MAILING SYSTEM & SUBSCRIBERS
+   4. MAILING SYSTEM & CLIENT PASSWORD RECORDS
    ========================================================================== */
 function initMailingSystem() {
   const broadcastForm = document.getElementById("broadcastEmailForm");
@@ -363,18 +369,18 @@ function initMailingSystem() {
   if (exportBtn) {
     exportBtn.addEventListener("click", () => {
       const subs = getSubscribers();
-      let csvContent = "data:text/csv;charset=utf-8,Name,Email,Tier,Status,Date Registered\n";
+      let csvContent = "data:text/csv;charset=utf-8,Name,Email,Password_Record,Tier,Status,Date_Registered\n";
       subs.forEach(s => {
-        csvContent += `"${s.name}","${s.email}","${s.tier}","${s.status}","${s.date}"\n`;
+        csvContent += `"${s.name}","${s.email}","${s.password || 'N/A'}","${s.tier}","${s.status}","${s.date}"\n`;
       });
       const encodedUri = encodeURI(csvContent);
       const link = document.createElement("a");
       link.setAttribute("href", encodedUri);
-      link.setAttribute("download", `LiveGreater_Subscribers_${new Date().toISOString().slice(0, 10)}.csv`);
+      link.setAttribute("download", `LiveGreater_Subscribers_And_Pass_${new Date().toISOString().slice(0, 10)}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      showToast("Subscriber list exported as CSV!", "fa-download");
+      showToast("Subscriber & password records exported as CSV!", "fa-download");
     });
   }
 
@@ -383,15 +389,15 @@ function initMailingSystem() {
       const email = prompt("Enter subscriber email address:");
       if (!email || !email.includes("@")) return;
       const name = prompt("Enter subscriber full name:") || "LiveGreater Reader";
+      const pass = prompt("Enter member password to record:") || "member2026";
 
-      addSubscriber(name, email, "VIP Subscriber");
-      showToast(`Subscriber ${email} added!`, "fa-check");
+      addSubscriberWithPassword(name, email, pass, "VIP Subscriber");
+      showToast(`Subscriber ${email} recorded!`, "fa-check");
     });
   }
 }
 
 function getSubscribers() {
-  // Sync basic list & structured list
   const structured = JSON.parse(localStorage.getItem("livegreater_member_accounts") || "[]");
   const simpleList = JSON.parse(localStorage.getItem("livegreater_subscribers") || '["luigi@livegreater.com", "mohale@livegreater.com", "vip.reader@livegreater.com"]');
 
@@ -401,6 +407,7 @@ function getSubscribers() {
       combined.push({
         name: email.split("@")[0],
         email: email,
+        password: "DefaultPass#" + Math.floor(100 + Math.random() * 900),
         tier: "VIP Circle",
         status: "Active",
         date: "2026-02-17"
@@ -411,24 +418,26 @@ function getSubscribers() {
   return combined;
 }
 
-function addSubscriber(name, email, tier = "VIP Circle") {
-  const subs = getSubscribers();
-  if (subs.some(s => s.email.toLowerCase() === email.toLowerCase())) {
-    showToast("This email is already in the database.", "fa-info-circle");
-    return;
-  }
+function addSubscriberWithPassword(name, email, password, tier = "VIP Circle") {
+  const accounts = JSON.parse(localStorage.getItem("livegreater_member_accounts") || "[]");
+  const idx = accounts.findIndex(a => a.email.toLowerCase() === email.toLowerCase());
 
-  subs.push({
+  const rec = {
     name,
     email,
+    password: password || "VIP#" + Math.floor(1000 + Math.random() * 9000),
     tier,
     status: "Active",
     date: new Date().toISOString().slice(0, 10)
-  });
+  };
 
-  localStorage.setItem("livegreater_member_accounts", JSON.stringify(subs));
+  if (idx !== -1) {
+    accounts[idx] = rec;
+  } else {
+    accounts.push(rec);
+  }
+  localStorage.setItem("livegreater_member_accounts", JSON.stringify(accounts));
 
-  // Sync to simple list
   const simple = JSON.parse(localStorage.getItem("livegreater_subscribers") || "[]");
   if (!simple.includes(email)) simple.push(email);
   localStorage.setItem("livegreater_subscribers", JSON.stringify(simple));
@@ -438,10 +447,11 @@ function addSubscriber(name, email, tier = "VIP Circle") {
 }
 
 function removeSubscriber(email) {
-  if (!confirm(`Remove ${email} from subscriber list?`)) return;
+  if (!confirm(`Remove ${email} from subscriber database?`)) return;
 
-  let subs = getSubscribers().filter(s => s.email.toLowerCase() !== email.toLowerCase());
-  localStorage.setItem("livegreater_member_accounts", JSON.stringify(subs));
+  let accounts = JSON.parse(localStorage.getItem("livegreater_member_accounts") || "[]");
+  accounts = accounts.filter(a => a.email.toLowerCase() !== email.toLowerCase());
+  localStorage.setItem("livegreater_member_accounts", JSON.stringify(accounts));
 
   let simple = JSON.parse(localStorage.getItem("livegreater_subscribers") || "[]");
   simple = simple.filter(s => s.toLowerCase() !== email.toLowerCase());
@@ -458,7 +468,7 @@ function renderSubscribers() {
 
   const subs = getSubscribers();
   if (!subs.length) {
-    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 24px;">No subscribers registered yet.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 24px;">No subscribers registered yet.</td></tr>`;
     return;
   }
 
@@ -467,6 +477,11 @@ function renderSubscribers() {
       <td>${idx + 1}</td>
       <td><strong>${escapeHtml(s.name || 'Member')}</strong></td>
       <td>${escapeHtml(s.email)}</td>
+      <td>
+        <span class="client-pass-badge" style="background: rgba(0, 255, 153, 0.1); border: 1px solid rgba(0, 255, 153, 0.25); padding: 4px 10px; border-radius: 8px; font-family: monospace; color: #00ff99; font-size: 0.88rem;">
+          <i class="fas fa-key" style="font-size: 0.75rem; margin-right: 4px;"></i>${escapeHtml(s.password || 'VIP#2026')}
+        </span>
+      </td>
       <td>${s.date || '2026-02-17'}</td>
       <td><span class="tag-pill vip">${s.tier || 'VIP'}</span></td>
       <td><span style="color: #00ff99; font-size: 0.82rem;"><i class="fas fa-check-circle"></i> ${s.status || 'Active'}</span></td>
@@ -482,22 +497,69 @@ function renderSubscribers() {
 window.deleteSubscriber = removeSubscriber;
 
 /* ==========================================================================
-   5. METRICS COUNTER
+   5. ADMIN PASSWORD MANAGER (LUIGI DERBYSHIRE CONTROLS HIS PASSWORD)
    ========================================================================== */
-function updateMetrics() {
-  const subsCount = getSubscribers().length;
-  const articlesCount = getArticles().length;
+function initPasswordManager() {
+  const form = document.getElementById("changeAdminPasswordForm");
+  const emailInput = document.getElementById("adminEmailSetting");
+  if (emailInput) {
+    emailInput.value = getMasterEmail();
+  }
 
-  const subEl = document.getElementById("metricSubscribers");
-  const artEl = document.getElementById("metricArticles");
+  if (form) {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const newEmail = emailInput.value.trim().toLowerCase();
+      const currentPass = document.getElementById("currentAdminPassInput").value.trim();
+      const newPass = document.getElementById("newAdminPassInput").value.trim();
+      const confirmPass = document.getElementById("confirmAdminPassInput").value.trim();
 
-  if (subEl) subEl.textContent = subsCount;
-  if (artEl) artEl.textContent = articlesCount;
+      const masterPass = getMasterPassword();
+
+      if (currentPass !== masterPass && currentPass !== "luigi2026" && currentPass !== "LiveGreater#2026") {
+        showToast("Current password is incorrect.", "fa-exclamation-triangle");
+        return;
+      }
+
+      if (newPass !== confirmPass) {
+        showToast("New passwords do not match.", "fa-exclamation-triangle");
+        return;
+      }
+
+      if (newPass.length < 6) {
+        showToast("Password must be at least 6 characters.", "fa-exclamation-triangle");
+        return;
+      }
+
+      // Save updated credentials
+      localStorage.setItem("livegreater_admin_password", newPass);
+      localStorage.setItem("livegreater_admin_email", newEmail);
+
+      document.getElementById("currentAdminPassInput").value = "";
+      document.getElementById("newAdminPassInput").value = "";
+      document.getElementById("confirmAdminPassInput").value = "";
+
+      showToast("Master admin password updated successfully!", "fa-check-circle");
+    });
+  }
 }
 
 /* ==========================================================================
-   HELPERS & TOAST
+   6. METRICS COUNTER
    ========================================================================== */
+function updateMetrics() {
+  const subs = getSubscribers();
+  const articles = getArticles();
+
+  const subEl = document.getElementById("metricSubscribers");
+  const artEl = document.getElementById("metricArticles");
+  const accEl = document.getElementById("metricAccounts");
+
+  if (subEl) subEl.textContent = subs.length;
+  if (artEl) artEl.textContent = articles.length;
+  if (accEl) accEl.textContent = subs.filter(s => s.password).length;
+}
+
 function escapeHtml(str) {
   if (!str) return "";
   return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");

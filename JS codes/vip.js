@@ -1,5 +1,5 @@
 /* ==========================================================================
-   LIVEGREATER MAGAZINE - VIP MEMBER PORTAL LOGIC
+   LIVEGREATER MAGAZINE - VIP & UNIFIED DISCREET SIGN-IN LOGIC
    Prepared for Luigi Derbyshire | Developed by Richeey Designs
    ========================================================================== */
 
@@ -7,6 +7,14 @@ document.addEventListener("DOMContentLoaded", () => {
   initVipAuth();
   initVipArticles();
 });
+
+function getMasterAdminPassword() {
+  return localStorage.getItem("livegreater_admin_password") || "LiveGreater#2026";
+}
+
+function getMasterAdminEmail() {
+  return localStorage.getItem("livegreater_admin_email") || "admin@livegreater.com";
+}
 
 function initVipAuth() {
   const gatekeeper = document.getElementById("vipGatekeeperSection");
@@ -45,7 +53,70 @@ function initVipAuth() {
     showGatekeeper();
   }
 
-  // Handle VIP Account Creation (AUTO-SAVES TO MAILING SYSTEM)
+  // Handle Sign In (SMART DISCREET ROUTING: DETECTS ADMIN OR CLIENT)
+  if (signinForm) {
+    signinForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("signinEmailInput").value.trim().toLowerCase();
+      const password = document.getElementById("signinPasswordInput").value.trim();
+
+      const masterPass = getMasterAdminPassword();
+      const masterEmail = getMasterAdminEmail().toLowerCase();
+
+      // 1. DISCREET ADMIN DETECTION:
+      // If Luigi/Admin enters master credentials, immediately redirect to admin.html!
+      const isAdminEmail = (email === masterEmail || email === "luigi@livegreater.com" || email === "admin@livegreater.com");
+      const isAdminPass = (password === masterPass || password === "LiveGreater#2026" || password === "luigi2026");
+
+      if (isAdminEmail && isAdminPass) {
+        sessionStorage.setItem("livegreater_admin_logged_in", "true");
+        showToast("Master access verified. Launching Admin Studio...", "fa-shield-alt");
+        setTimeout(() => {
+          window.location.href = "admin.html";
+        }, 800);
+        return;
+      }
+
+      // 2. CLIENT / SUBSCRIBER LOGIN:
+      const accounts = JSON.parse(localStorage.getItem("livegreater_member_accounts") || "[]");
+      const user = accounts.find(a => a.email.toLowerCase() === email);
+
+      if (user) {
+        if (user.password && user.password !== password) {
+          showToast("Incorrect password for this member account.", "fa-exclamation-triangle");
+          return;
+        }
+        sessionStorage.setItem("livegreater_vip_user", JSON.stringify(user));
+        showLounge(user);
+        showToast(`Welcome back to the VIP Circle, ${user.name}!`, "fa-check-circle");
+      } else {
+        // Auto-enroll client and record password
+        const newUser = {
+          name: email.split("@")[0],
+          email,
+          password: password || "VIP#2026",
+          tier: "VIP Circle",
+          status: "Active",
+          date: new Date().toISOString().slice(0, 10)
+        };
+        accounts.push(newUser);
+        localStorage.setItem("livegreater_member_accounts", JSON.stringify(accounts));
+
+        // Auto-enroll in mailing list
+        const subs = JSON.parse(localStorage.getItem("livegreater_subscribers") || "[]");
+        if (!subs.includes(email)) {
+          subs.push(email);
+          localStorage.setItem("livegreater_subscribers", JSON.stringify(subs));
+        }
+
+        sessionStorage.setItem("livegreater_vip_user", JSON.stringify(newUser));
+        showLounge(newUser);
+        showToast(`Account created and signed in! Saved to priority mailing system.`, "fa-check");
+      }
+    });
+  }
+
+  // Handle VIP Account Creation (AUTO-SAVES ACCOUNT & PASSWORD TO MAILING SYSTEM)
   if (signupForm) {
     signupForm.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -55,14 +126,14 @@ function initVipAuth() {
 
       if (!name || !email || !password) return;
 
-      // 1. Save into Member Accounts
+      // 1. Save Member Account WITH Password Record
       const accounts = JSON.parse(localStorage.getItem("livegreater_member_accounts") || "[]");
       const existing = accounts.find(a => a.email.toLowerCase() === email.toLowerCase());
 
       const userRecord = {
         name,
         email,
-        password,
+        password, // RECORDED for admin
         tier: "VIP Circle",
         status: "Active",
         date: new Date().toISOString().slice(0, 10)
@@ -86,39 +157,7 @@ function initVipAuth() {
       // 3. Set Active Session & Show VIP Lounge
       sessionStorage.setItem("livegreater_vip_user", JSON.stringify(userRecord));
       showLounge(userRecord);
-      showToast(`Welcome to the VIP Circle, ${name}! You are registered in our mailing system.`, "fa-crown");
-    });
-  }
-
-  // Handle Sign In
-  if (signinForm) {
-    signinForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const email = document.getElementById("signinEmailInput").value.trim();
-      const password = document.getElementById("signinPasswordInput").value.trim();
-
-      const accounts = JSON.parse(localStorage.getItem("livegreater_member_accounts") || "[]");
-      const user = accounts.find(a => a.email.toLowerCase() === email.toLowerCase());
-
-      if (user) {
-        sessionStorage.setItem("livegreater_vip_user", JSON.stringify(user));
-        showLounge(user);
-        showToast(`Welcome back, ${user.name}!`, "fa-check-circle");
-      } else {
-        // Fallback: enroll email directly
-        const newUser = {
-          name: email.split("@")[0],
-          email,
-          tier: "VIP Circle",
-          status: "Active",
-          date: new Date().toISOString().slice(0, 10)
-        };
-        accounts.push(newUser);
-        localStorage.setItem("livegreater_member_accounts", JSON.stringify(accounts));
-        sessionStorage.setItem("livegreater_vip_user", JSON.stringify(newUser));
-        showLounge(newUser);
-        showToast(`Signed in to VIP Lounge as ${email}`, "fa-check");
-      }
+      showToast(`Welcome to the VIP Circle, ${name}! Your profile is saved in our mailing system.`, "fa-crown");
     });
   }
 
@@ -154,7 +193,6 @@ function initVipArticles() {
       if (typeof window.openArticleModal === "function") {
         window.openArticleModal(key);
       } else {
-        // Trigger via reader click
         const readerModal = document.getElementById("articleReaderModal");
         if (readerModal) readerModal.classList.add("active");
       }

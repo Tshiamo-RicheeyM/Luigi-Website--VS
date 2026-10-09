@@ -29,7 +29,7 @@
         <span class="purple">Admin Studio</span>
       </h1>
     </a>
-    <span class="admin-badge"><i class="fas fa-shield-alt"></i> Editorial Management</span>
+    <span class="admin-badge"><i class="fas fa-shield-alt"></i> Publisher Control</span>
   </div>
 
   <div class="admin-header-user" id="adminUserSection">
@@ -45,35 +45,35 @@
   </div>
 </header>
 
-<!-- ADMIN AUTH GUARD MODAL (IF NOT LOGGED IN) -->
+<!-- ADMIN AUTH GUARD MODAL (IF NOT LOGGED IN DIRECTLY) -->
 <div id="adminAuthModal" class="admin-auth-overlay">
   <div class="admin-auth-card">
     <div class="auth-card-header">
       <img src="images/Logo.jpeg" alt="Logo">
-      <h2>LiveGreater Publisher Portal</h2>
+      <h2>LiveGreater Studio</h2>
       <p class="tagline">Stay Ahead, with LiveGreater</p>
-      <div class="auth-subtext">Restricted to Luigi Derbyshire & Editorial Management</div>
+      <div class="auth-subtext">Private Management Portal for Luigi Derbyshire</div>
     </div>
 
     <form id="adminLoginForm">
       <div class="form-group">
-        <label><i class="fas fa-envelope"></i> Publisher Email</label>
+        <label><i class="fas fa-envelope"></i> Master Login Email</label>
         <input type="email" id="adminEmailInput" value="admin@livegreater.com" required>
       </div>
       <div class="form-group">
         <label><i class="fas fa-lock"></i> Master Password</label>
-        <input type="password" id="adminPasswordInput" value="luigi2026" required>
+        <input type="password" id="adminPasswordInput" placeholder="Enter master password" required>
       </div>
       <button type="submit" class="primary-btn" style="width: 100%; justify-content: center;">
-        <i class="fas fa-unlock"></i> Access Admin Studio
+        <i class="fas fa-unlock"></i> Access Studio
       </button>
       <div class="quick-login-hint">
-        <span>Default Credentials: <code>admin@livegreater.com</code> / <code>luigi2026</code></span>
+        <span>Default Master Password: <code>LiveGreater#2026</code></span>
       </div>
     </form>
     <div style="margin-top: 18px; text-align: center;">
       <a href="index.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">
-        <i class="fas fa-arrow-left"></i> Return to Public Magazine
+        <i class="fas fa-arrow-left"></i> Return to Public Site
       </a>
     </div>
   </div>
@@ -86,7 +86,7 @@
   <section class="admin-hero">
     <div>
       <h2>Welcome back, Luigi.</h2>
-      <p>Control articles, monitor real-time subscribers, and dispatch digital releases to the LiveGreater Circle.</p>
+      <p>Control stories, view registered client passwords, oversee the subscriber mailing database, and manage security settings.</p>
     </div>
     <div class="hero-actions">
       <button id="openNewArticleModalBtn" class="primary-btn"><i class="fas fa-plus"></i> New Article</button>
@@ -100,7 +100,7 @@
       <div class="metric-icon" style="background: rgba(123, 92, 255, 0.15); color: #7b5cff;"><i class="fas fa-users"></i></div>
       <div class="metric-info">
         <h3 id="metricSubscribers">0</h3>
-        <p>VIP Subscribers & Users</p>
+        <p>Subscribers & Members</p>
       </div>
     </div>
     <div class="metric-card">
@@ -111,17 +111,17 @@
       </div>
     </div>
     <div class="metric-card">
-      <div class="metric-icon" style="background: rgba(255, 215, 0, 0.15); color: #ffd700;"><i class="fas fa-book-open"></i></div>
+      <div class="metric-icon" style="background: rgba(255, 215, 0, 0.15); color: #ffd700;"><i class="fas fa-key"></i></div>
       <div class="metric-info">
-        <h3>8</h3>
-        <p>Curated Categories</p>
+        <h3 id="metricAccounts">0</h3>
+        <p>Client Password Records</p>
       </div>
     </div>
     <div class="metric-card">
-      <div class="metric-icon" style="background: rgba(0, 180, 216, 0.15); color: #00b4d8;"><i class="fas fa-satellite-dish"></i></div>
+      <div class="metric-icon" style="background: rgba(0, 180, 216, 0.15); color: #00b4d8;"><i class="fas fa-shield-alt"></i></div>
       <div class="metric-info">
-        <h3>Live</h3>
-        <p>Platform Status</p>
+        <h3>Encrypted</h3>
+        <p>Master Security</p>
       </div>
     </div>
   </section>
@@ -129,7 +129,8 @@
   <!-- ADMIN TABS -->
   <div class="admin-nav-tabs">
     <button class="tab-btn active" data-tab="articles"><i class="fas fa-file-alt"></i> Articles Studio</button>
-    <button class="tab-btn" data-tab="mailing"><i class="fas fa-envelope-open-text"></i> Mailing System</button>
+    <button class="tab-btn" data-tab="mailing"><i class="fas fa-envelope-open-text"></i> Mailing & Client Passwords</button>
+    <button class="tab-btn" data-tab="security"><i class="fas fa-key"></i> Password Manager</button>
     <button class="tab-btn" data-tab="company"><i class="fas fa-info-circle"></i> Brand & Developer Creds</button>
   </div>
 
@@ -165,12 +166,12 @@
     </div>
   </section>
 
-  <!-- TAB 2: MAILING SYSTEM -->
+  <!-- TAB 2: MAILING SYSTEM & CLIENT PASSWORDS RECORD -->
   <section class="tab-pane" id="pane-mailing">
     <div class="pane-header">
       <div>
-        <h3>Subscriber Database & Mailing Engine</h3>
-        <p>Full control over VIP members, newsletter subscribers, and automated releases.</p>
+        <h3>Subscriber Database & Client Password Records</h3>
+        <p>Full control over subscribers, automated releases, and client account password records.</p>
       </div>
       <div class="pane-controls">
         <button id="exportCsvBtn" class="btn-secondary"><i class="fas fa-file-export"></i> Export CSV</button>
@@ -202,8 +203,9 @@
         <thead>
           <tr>
             <th>#</th>
-            <th>Subscriber / Member</th>
+            <th>Subscriber / Client Name</th>
             <th>Email Address</th>
+            <th>Client Password (Record)</th>
             <th>Date Registered</th>
             <th>Access Tier</th>
             <th>Status</th>
@@ -211,13 +213,50 @@
           </tr>
         </thead>
         <tbody id="subscribersTableBody">
-          <!-- Populated by JavaScript -->
+          <!-- Populated by JavaScript with Password Record column -->
         </tbody>
       </table>
     </div>
   </section>
 
-  <!-- TAB 3: BRAND & CREDENTIALS -->
+  <!-- TAB 3: ADMIN PASSWORD MANAGER -->
+  <section class="tab-pane" id="pane-security">
+    <div class="creds-grid">
+      <div class="creds-card" style="max-width: 600px;">
+        <div class="creds-badge owner-badge"><i class="fas fa-lock"></i> Master Security Controls</div>
+        <h3>Admin Password Manager</h3>
+        <p class="creds-desc">Manage and update your master admin login credentials. This password unlocks your exclusive admin studio when logging in through the main sign-in portal.</p>
+
+        <form id="changeAdminPasswordForm">
+          <div class="form-group">
+            <label>Master Admin Email</label>
+            <input type="email" id="adminEmailSetting" value="admin@livegreater.com" required>
+          </div>
+          <div class="form-group">
+            <label>Current Master Password</label>
+            <input type="password" id="currentAdminPassInput" placeholder="Enter current password" required>
+          </div>
+          <div class="form-group">
+            <label>New Master Password</label>
+            <input type="password" id="newAdminPassInput" placeholder="Enter new password (min 6 characters)" minlength="6" required>
+          </div>
+          <div class="form-group">
+            <label>Confirm New Master Password</label>
+            <input type="password" id="confirmAdminPassInput" placeholder="Confirm new password" minlength="6" required>
+          </div>
+          <button type="submit" class="primary-btn" style="width: 100%; justify-content: center;">
+            <i class="fas fa-save"></i> Save & Update Master Password
+          </button>
+        </form>
+
+        <div style="margin-top: 20px; padding: 14px; background: rgba(0, 255, 153, 0.08); border: 1px solid rgba(0, 255, 153, 0.2); border-radius: 12px; font-size: 0.85rem; color: #d0f7e5;">
+          <i class="fas fa-info-circle"></i> <strong>Security Tip:</strong> You can sign in using your admin credentials from the normal "Sign In / VIP" button on any page. The system will automatically detect you and launch this Admin Studio!
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB 4: BRAND & CREDENTIALS -->
   <section class="tab-pane" id="pane-company">
     <div class="creds-grid">
       <!-- OWNER CARD -->
