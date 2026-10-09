@@ -2,46 +2,57 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fashion & Art | LiveGreater Magazine</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&display=swap" rel="stylesheet">
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <link rel="stylesheet" href="css codes\fashionart.css">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="../css codes/fashionart.css">
 </head>
 
 <body>
 
 <div class="bg-overlay"></div>
 
+<!-- HEADER -->
 <header>
-  <div class="logo">
-    <img src="images\Logo.jpeg">
+  <a href="../index.html" class="logo">
+    <img src="../images/Logo.jpeg" alt="LiveGreater Magazine Logo">
     <h1>
       <span class="black">LiveGreater</span>
       <span class="gradient">Magazine</span>
     </h1>
-  </div>
+  </a>
 
   <nav>
-    <a href="html files\index.html">Home</a>
-    <a href="html files\inspiration.html">Inspiration</a>
-    <a href="html files\health.html">Health</a>
-    <a href="html files\sports.html">Sports</a>
-    <a href="html files\influence.html">Influence</a>
-    <a href="html files\entrepreneurship.html">Entrepreneurship</a>
-    <a href="html files\lifestyle.html">Lifestyle</a>
-    <a href="html files\fashionart.html" class="active">Fashion & Art</a>
+    <a href="../index.html">Home</a>
+    <a href="inspiration.html">Inspiration</a>
+    <a href="health.html">Health</a>
+    <a href="sports.html">Sports</a>
+    <a href="influence.html">Influence</a>
+    <a href="entrepreneurship.html">Entrepreneurship</a>
+    <a href="lifestyle.html">Lifestyle</a>
+    <a href="fashionart.html" class="active">Fashion & Art</a>
   </nav>
 </header>
 
+<!-- INTRO -->
 <section class="intro">
-  <h2>Where Style Meets Story</h2>
-  <p>Culture. Creativity. Expression.</p>
+  <h2>Where Style Meets Story.</h2>
+  <div class="accent-line" style="background: #ff007f;"></div>
+  <p>Culture. Creativity. Expression. Where imagination transforms into influence.</p>
 </section>
 
+<!-- EXCLUSIVE FEATURE -->
 <section class="exclusive creative-feature">
+  <img src="../images/fashion.JPG" alt="Fashion and Art Editorial Cover">
   <div class="exclusive-text">
+    <span class="feature-badge" style="color: #ff007f;"><i class="fas fa-palette"></i> COUTURE & DESIGN</span>
     <h3>The Canvas of Identity</h3>
     <p>
       Fashion is not fabric — it is identity stitched in motion.
@@ -50,63 +61,89 @@
       aesthetics and turning imagination into influence.
       This is where culture breathes.
     </p>
-    <button onclick="location.href='#'">Explore Feature</button>
+    <button class="primary-btn" style="background: #ff007f;"><i class="fas fa-book-open"></i> Explore Feature</button>
   </div>
-  <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\exclusive.jpeg">
 </section>
 
+<!-- SLIDER SECTION -->
 <section class="slider-section">
 
-  <button class="arrow left" onclick="slideLeft()">&#10094;</button>
+  <button class="arrow left" aria-label="Previous slide">&#10094;</button>
 
   <div class="slider-window">
     <div class="slider-track" id="sliderTrack">
 
       <div class="card">
-        <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg">
+        <div class="card-img-wrapper">
+          <span class="card-tag">Streetwear</span>
+          <img src="../images/fashion.JPG" alt="Street Culture">
+        </div>
         <h4>Street Culture</h4>
-        <p>Urban expression evolving.</p>
+        <p>The evolutionary dialogue between underground aesthetics and luxury houses.</p>
+        <span class="card-read-more" style="color: #ff007f;">Read Story <i class="fas fa-arrow-right"></i></span>
       </div>
 
       <div class="card">
-        <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg">
-        <h4>Modern Art</h4>
-        <p>Abstract meets identity.</p>
+        <div class="card-img-wrapper">
+          <span class="card-tag">Exhibition</span>
+          <img src="../images/exclusive.JPG" alt="Modern Gallery Art">
+        </div>
+        <h4>Modern Gallery</h4>
+        <p>Sculptural expression, abstract minimalism, and contemporary art movements.</p>
+        <span class="card-read-more" style="color: #ff007f;">Read Story <i class="fas fa-arrow-right"></i></span>
       </div>
 
       <div class="card">
-        <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg">
-        <h4>Runway Trends</h4>
-        <p>Future silhouettes.</p>
+        <div class="card-img-wrapper">
+          <span class="card-tag">Runway</span>
+          <img src="../images/lifefstyle1.JPG" alt="Runway Trends">
+        </div>
+        <h4>Runway Silhouettes</h4>
+        <p>Forward-leaning tailoring, deconstructed textiles, and futuristic drape.</p>
+        <span class="card-read-more" style="color: #ff007f;">Read Story <i class="fas fa-arrow-right"></i></span>
       </div>
 
       <div class="card">
-        <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg">
-        <h4>Creative Minds</h4>
-        <p>Artists shaping tomorrow.</p>
+        <div class="card-img-wrapper">
+          <span class="card-tag">Visionaries</span>
+          <img src="../images/insp1.JPG" alt="Creative Minds">
+        </div>
+        <h4>Creative Direction</h4>
+        <p>Inside the work of visionary art directors building the visual language of our era.</p>
+        <span class="card-read-more" style="color: #ff007f;">Read Story <i class="fas fa-arrow-right"></i></span>
       </div>
 
       <div class="card">
-        <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg">
+        <div class="card-img-wrapper">
+          <span class="card-tag">Editorial</span>
+          <img src="../images/influence.JPG" alt="Visual Storytelling">
+        </div>
         <h4>Visual Storytelling</h4>
-        <p>Images that speak volumes.</p>
+        <p>The craft of iconic imagery, photography lenses, and narrative styling.</p>
+        <span class="card-read-more" style="color: #ff007f;">Read Story <i class="fas fa-arrow-right"></i></span>
       </div>
 
     </div>
 
     <div class="progress-bar">
-      <div class="progress"></div>
+      <div class="progress" style="background: #ff007f;"></div>
     </div>
 
   </div>
 
-  <button class="arrow right" onclick="slideRight()">&#10095;</button>
+  <button class="arrow right" aria-label="Next slide">&#10095;</button>
 
 </section>
 
+<!-- FOOTER -->
 <footer>
+  <div class="footer-brand">
+    <h4>LiveGreater Magazine</h4>
+    <p>Inspiring growth, elevating mindset, and spotlighting culture-defining stories worldwide.</p>
+  </div>
+
   <div class="footer-links">
-    <a href="#">Home</a>
+    <a href="../index.html">Home</a>
     <a href="#">About Us</a>
     <a href="#">Services</a>
     <a href="#">Portfolio</a>
@@ -114,12 +151,15 @@
   </div>
 
   <div class="socials">
-    <i class="fab fa-facebook-f"></i>
-    <i class="fab fa-instagram"></i>
-    <i class="fab fa-tiktok"></i>
+    <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="https://tiktok.com" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
   </div>
+
+  <div class="copyright">&copy; 2026 LiveGreater Magazine. All rights reserved.</div>
+  <div class="developer-credit">Platform Designed & Developed by <strong>Tshiamo Mafojane (Richeey Designs)</strong> for <strong>Luigi Derbyshire</strong></div>
 </footer>
 
-<script src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\JS codes\fashionart.js"></script>
+<script src="../JS codes/main.js"></script>
 </body>
 </html>

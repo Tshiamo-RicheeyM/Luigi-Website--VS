@@ -2,73 +2,126 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inspiration | LiveGreater Magazine</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&display=swap" rel="stylesheet">
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <link rel="stylesheet" href="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\css codes\inspiration.css">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="../css codes/inspiration.css">
 </head>
 
 <body>
 
 <div class="bg-overlay"></div>
 
+<!-- HEADER -->
 <header>
-  <div class="logo">
-    <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg">
+  <a href="../index.html" class="logo">
+    <img src="../images/Logo.jpeg" alt="LiveGreater Magazine Logo">
     <h1>
       <span class="black">LiveGreater</span>
       <span class="gold">Magazine</span>
     </h1>
-  </div>
+  </a>
 
   <nav>
-    <a href="index.html">Home</a>
+    <a href="../index.html">Home</a>
     <a href="inspiration.html" class="active">Inspiration</a>
     <a href="health.html">Health</a>
     <a href="sports.html">Sports</a>
     <a href="influence.html">Influence</a>
     <a href="entrepreneurship.html">Entrepreneurship</a>
-    <a href="Lifestyle.html">Lifestyle</a>
+    <a href="lifestyle.html">Lifestyle</a>
     <a href="fashionart.html">Fashion & Art</a>
   </nav>
 </header>
 
+<!-- INTRO -->
 <section class="intro">
-  <h2>Inspiration</h2>
+  <h2>LiveGreater Inspiration.</h2>
   <div class="accent-line"></div>
   <p>
-    Stories that elevate mindset, fuel purpose,
-    and push you to live greater.
+    Stories that elevate mindset, fuel uncompromising purpose,
+    and push you to transcend your limits every single day.
   </p>
 </section>
 
+<!-- EXCLUSIVE FEATURE -->
 <section class="exclusive">
-  <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\insp1.JPG">
-
+  <img src="../images/insp1.JPG" alt="Inspiration Feature Editorial">
   <div class="exclusive-text">
-    <h3>Featured Story</h3>
+    <span class="feature-badge"><i class="fas fa-fire"></i> FEATURED STORY</span>
+    <h3>The Architecture of Unshakeable Purpose</h3>
     <p>
-      Inside the journeys of individuals who chose growth,
-      discipline and vision over comfort.
+      Inside the journeys of individuals who chose growth, discipline, and audacious vision
+      over the comfort of complacency. How high achievers navigate uncertainty and transform friction into momentum.
     </p>
-    <button class="primary-btn">Read Article</button>
+    <button class="primary-btn"><i class="fas fa-book-open"></i> Read Article</button>
   </div>
 </section>
 
+<!-- SLIDER SECTION -->
 <section class="slider-section">
 
-  <button class="arrow left" onclick="slideLeft()">&#10094;</button>
+  <button class="arrow left" aria-label="Previous slide">&#10094;</button>
 
   <div class="slider-window">
     <div class="slider-track" id="sliderTrack">
 
-      <div class="card"><img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg"><h4>Nutrition</h4><p>Fuel your greatness.</p></div>
-      <div class="card"><img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg"><h4>Mental Health</h4><p>Clarity & resilience.</p></div>
-      <div class="card"><img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg"><h4>Fitness</h4><p>Strength & discipline.</p></div>
-      <div class="card"><img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg"><h4>Recovery</h4><p>Rest smarter.</p></div>
-      <div class="card"><img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg"><h4>Longevity</h4><p>Build long-term vitality.</p></div>
+      <div class="card">
+        <div class="card-img-wrapper">
+          <span class="card-tag">Mindset</span>
+          <img src="../images/insp1.JPG" alt="Mindset Mastery">
+        </div>
+        <h4>Mindset Mastery</h4>
+        <p>Rewiring internal self-talk and breaking through psychological ceilings.</p>
+        <span class="card-read-more">Read Story <i class="fas fa-arrow-right"></i></span>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrapper">
+          <span class="card-tag">Purpose</span>
+          <img src="../images/fitness.JPG" alt="Purpose and Drive">
+        </div>
+        <h4>Purpose & Drive</h4>
+        <p>Aligning daily habits and routines with your overarching life mission.</p>
+        <span class="card-read-more">Read Story <i class="fas fa-arrow-right"></i></span>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrapper">
+          <span class="card-tag">Discipline</span>
+          <img src="../images/sport.JPG" alt="The Relentless Grind">
+        </div>
+        <h4>The Daily Grind</h4>
+        <p>Where uncompromising consistency defeats fleeting bursts of motivation.</p>
+        <span class="card-read-more">Read Story <i class="fas fa-arrow-right"></i></span>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrapper">
+          <span class="card-tag">Resilience</span>
+          <img src="../images/exclusive.JPG" alt="Overcoming Odds">
+        </div>
+        <h4>Overcoming the Odds</h4>
+        <p>Firsthand accounts of leaders rising through high-friction environments.</p>
+        <span class="card-read-more">Read Story <i class="fas fa-arrow-right"></i></span>
+      </div>
+
+      <div class="card">
+        <div class="card-img-wrapper">
+          <span class="card-tag">Vision</span>
+          <img src="../images/entrepreneur.JPG" alt="Vision and Legacy">
+        </div>
+        <h4>Vision & Legacy</h4>
+        <p>Constructing enduring institutions and leaving a permanent impact.</p>
+        <span class="card-read-more">Read Story <i class="fas fa-arrow-right"></i></span>
+      </div>
 
     </div>
 
@@ -78,15 +131,19 @@
 
   </div>
 
-  <button class="arrow right" onclick="slideRight()">&#10095;</button>
+  <button class="arrow right" aria-label="Next slide">&#10095;</button>
 
 </section>
 
-
-
+<!-- FOOTER -->
 <footer>
+  <div class="footer-brand">
+    <h4>LiveGreater Magazine</h4>
+    <p>Inspiring growth, elevating mindset, and spotlighting culture-defining stories worldwide.</p>
+  </div>
+
   <div class="footer-links">
-    <a href="#">Home</a>
+    <a href="../index.html">Home</a>
     <a href="#">About Us</a>
     <a href="#">Services</a>
     <a href="#">Portfolio</a>
@@ -94,13 +151,15 @@
   </div>
 
   <div class="socials">
-    <i class="fab fa-facebook-f"></i>
-    <i class="fab fa-instagram"></i>
-    <i class="fab fa-tiktok"></i>
+    <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="https://tiktok.com" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
   </div>
+
+  <div class="copyright">&copy; 2026 LiveGreater Magazine. All rights reserved.</div>
+  <div class="developer-credit">Platform Designed & Developed by <strong>Tshiamo Mafojane (Richeey Designs)</strong> for <strong>Luigi Derbyshire</strong></div>
 </footer>
 
-<script src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\JS codes\inspiration.js"></script>
-
+<script src="../JS codes/main.js"></script>
 </body>
 </html>

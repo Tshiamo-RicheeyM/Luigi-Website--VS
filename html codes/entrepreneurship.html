@@ -2,29 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Entrepreneurship | LiveGreater Magazine</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&display=swap" rel="stylesheet">
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <link rel="stylesheet" href="css codes\entrepreneurship.css">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="../css codes/entrepreneurship.css">
 </head>
 
 <body>
 
 <div class="bg-overlay"></div>
 
+<!-- HEADER -->
 <header>
-  <div class="logo">
-    <img src="images\Logo.jpeg">
+  <a href="../index.html" class="logo">
+    <img src="../images/Logo.jpeg" alt="LiveGreater Magazine Logo">
     <h1>
       <span class="black">LiveGreater</span>
-      <span class="purple">Magazine</span>
+      <span class="purple" style="color: #00b4d8;">Magazine</span>
     </h1>
-  </div>
+  </a>
 
   <nav>
-    <a href="index.html">Home</a>
+    <a href="../index.html">Home</a>
     <a href="inspiration.html">Inspiration</a>
     <a href="health.html">Health</a>
     <a href="sports.html">Sports</a>
@@ -35,80 +41,108 @@
   </nav>
 </header>
 
+<!-- INTRO -->
 <section class="intro">
   <h2>Blueprints. Risk. Execution.</h2>
-  <p>Turning ideas into scalable realities.</p>
+  <div class="accent-line" style="background: #00b4d8;"></div>
+  <p>Turning visionary ideas into scalable, defensible realities that outlast trends.</p>
 </section>
 
+<!-- EXCLUSIVE FEATURE -->
 <section class="exclusive business-feature">
-  <img src="images\exclusive.jpeg">
+  <img src="../images/entrepreneur.JPG" alt="Entrepreneurship Feature Cover">
   <div class="exclusive-text">
+    <span class="feature-badge" style="color: #00b4d8;"><i class="fas fa-chart-line"></i> CASE STUDY</span>
     <h3>Building Beyond Limits</h3>
     <p>
       Entrepreneurship is not comfort — it is calculated pressure.
       It demands clarity, resilience, and disciplined execution.
-      The entrepreneurs shaping tomorrow are not chasing trends,
-      they are creating systems, solving real problems, and building
-      legacies that extend beyond profit.
-      LiveGreater Magazine highlights founders who think long-term
-      and move with strategic intent.
+      The entrepreneurs shaping tomorrow are not chasing hype; they are creating systems,
+      solving real problems, and building legacies that extend beyond profit.
     </p>
-    <button onclick="location.href='#'">Read Case Study</button>
+    <button class="primary-btn" style="background: #00b4d8; color: #021820;"><i class="fas fa-book-open"></i> Read Case Study</button>
   </div>
 </section>
 
+<!-- SLIDER SECTION -->
 <section class="slider-section">
 
-  <button class="arrow left" onclick="slideLeft()">&#10094;</button>
+  <button class="arrow left" aria-label="Previous slide">&#10094;</button>
 
   <div class="slider-window">
     <div class="slider-track" id="sliderTrack">
 
       <div class="card">
-        <img src="images\Logo.jpeg">
+        <div class="card-img-wrapper">
+          <span class="card-tag">Strategy</span>
+          <img src="../images/entrepreneur.JPG" alt="Startup Strategy">
+        </div>
         <h4>Startup Strategy</h4>
-        <p>Launching with clarity.</p>
+        <p>Launching with ruthless clarity and defining product-market dominance early.</p>
+        <span class="card-read-more" style="color: #00b4d8;">Read Story <i class="fas fa-arrow-right"></i></span>
       </div>
 
       <div class="card">
-        <img src="images\Logo.jpeg">
+        <div class="card-img-wrapper">
+          <span class="card-tag">Scale</span>
+          <img src="../images/travel.JPG" alt="Scaling Systems">
+        </div>
         <h4>Scaling Systems</h4>
-        <p>Structure drives growth.</p>
+        <p>Building automated operational structures that thrive as revenue multiplies.</p>
+        <span class="card-read-more" style="color: #00b4d8;">Read Story <i class="fas fa-arrow-right"></i></span>
       </div>
 
       <div class="card">
-        <img src="images\Logo.jpeg">
+        <div class="card-img-wrapper">
+          <span class="card-tag">Capital</span>
+          <img src="../images/exclusive.JPG" alt="Investment Mindset">
+        </div>
         <h4>Investment Mindset</h4>
-        <p>Smart capital allocation.</p>
+        <p>Allocating capital with precision, securing funding, and compounding equity.</p>
+        <span class="card-read-more" style="color: #00b4d8;">Read Story <i class="fas fa-arrow-right"></i></span>
       </div>
 
       <div class="card">
-        <img src="images\Logo.jpeg">
-        <h4>Leadership</h4>
-        <p>Vision with execution.</p>
+        <div class="card-img-wrapper">
+          <span class="card-tag">Executive</span>
+          <img src="../images/insp1.JPG" alt="Leadership">
+        </div>
+        <h4>Executive Leadership</h4>
+        <p>Cultivating winning team culture and aligning talent around high stakes.</p>
+        <span class="card-read-more" style="color: #00b4d8;">Read Story <i class="fas fa-arrow-right"></i></span>
       </div>
 
       <div class="card">
-        <img src="images\Logo.jpeg">
+        <div class="card-img-wrapper">
+          <span class="card-tag">Global</span>
+          <img src="../images/fitness.JPG" alt="Market Expansion">
+        </div>
         <h4>Market Expansion</h4>
-        <p>Growth beyond borders.</p>
+        <p>Expanding across global borders and establishing international market footprint.</p>
+        <span class="card-read-more" style="color: #00b4d8;">Read Story <i class="fas fa-arrow-right"></i></span>
       </div>
 
     </div>
 
     <div class="progress-bar">
-      <div class="progress"></div>
+      <div class="progress" style="background: #00b4d8;"></div>
     </div>
 
   </div>
 
-  <button class="arrow right" onclick="slideRight()">&#10095;</button>
+  <button class="arrow right" aria-label="Next slide">&#10095;</button>
 
 </section>
 
+<!-- FOOTER -->
 <footer>
+  <div class="footer-brand">
+    <h4>LiveGreater Magazine</h4>
+    <p>Inspiring growth, elevating mindset, and spotlighting culture-defining stories worldwide.</p>
+  </div>
+
   <div class="footer-links">
-    <a href="#">Home</a>
+    <a href="../index.html">Home</a>
     <a href="#">About Us</a>
     <a href="#">Services</a>
     <a href="#">Portfolio</a>
@@ -116,12 +150,15 @@
   </div>
 
   <div class="socials">
-    <i class="fab fa-facebook-f"></i>
-    <i class="fab fa-instagram"></i>
-    <i class="fab fa-tiktok"></i>
+    <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="https://tiktok.com" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
   </div>
+
+  <div class="copyright">&copy; 2026 LiveGreater Magazine. All rights reserved.</div>
+  <div class="developer-credit">Platform Designed & Developed by <strong>Tshiamo Mafojane (Richeey Designs)</strong> for <strong>Luigi Derbyshire</strong></div>
 </footer>
 
-<script src="JS codes\entrepreneurship.js"></script>
+<script src="../JS codes/main.js"></script>
 </body>
 </html>

@@ -2,29 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Influence | LiveGreater Magazine</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&display=swap" rel="stylesheet">
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <link rel="stylesheet" href="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\css codes\influence.css">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="../css codes/influence.css">
 </head>
 
 <body>
 
 <div class="bg-overlay"></div>
 
+<!-- HEADER -->
 <header>
-  <div class="logo">
-    <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg">
+  <a href="../index.html" class="logo">
+    <img src="../images/Logo.jpeg" alt="LiveGreater Magazine Logo">
     <h1>
       <span class="black">LiveGreater</span>
-      <span class="purple">Magazine</span>
+      <span class="purple" style="color: #c77dff;">Magazine</span>
     </h1>
-  </div>
+  </a>
 
   <nav>
-    <a href="index.html">Home</a>
+    <a href="../index.html">Home</a>
     <a href="inspiration.html">Inspiration</a>
     <a href="health.html">Health</a>
     <a href="sports.html">Sports</a>
@@ -35,79 +41,108 @@
   </nav>
 </header>
 
+<!-- INTRO -->
 <section class="intro">
-  <h2>Voices That Move Culture</h2>
-  <p>Power. Presence. Perspective.</p>
+  <h2>Voices That Move Culture.</h2>
+  <div class="accent-line" style="background: #c77dff;"></div>
+  <p>Power. Presence. Perspective. Unlocking the true architecture of impact.</p>
 </section>
 
+<!-- EXCLUSIVE FEATURE -->
 <section class="exclusive influence-feature">
-  <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\exclusive.jpeg">
+  <img src="../images/influence.JPG" alt="Influence Feature Cover">
   <div class="exclusive-text">
+    <span class="feature-badge" style="color: #c77dff;"><i class="fas fa-bullhorn"></i> CULTURE & IMPACT</span>
     <h3>The Architecture of Impact</h3>
     <p>
       Influence is not noise. It is structure. It is clarity.
-      True influence reshapes rooms before words are even spoken.
-      It builds movements, defines narratives, and creates
-      opportunities for others to rise.
-      At LiveGreater Magazine, we spotlight leaders
-      whose impact stretches beyond platforms into culture itself.
+      True influence reshapes rooms before words are spoken.
+      It builds enduring movements, redefines cultural narratives, and creates
+      sustainable pathways for others to rise.
     </p>
-    <button onclick="location.href='#'">Read Feature</button>
+    <button class="primary-btn" style="background: #c77dff; color: #150524;"><i class="fas fa-book-open"></i> Read Feature</button>
   </div>
 </section>
 
+<!-- SLIDER SECTION -->
 <section class="slider-section">
 
-  <button class="arrow left" onclick="slideLeft()">&#10094;</button>
+  <button class="arrow left" aria-label="Previous slide">&#10094;</button>
 
   <div class="slider-window">
     <div class="slider-track" id="sliderTrack">
 
       <div class="card">
-        <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg">
+        <div class="card-img-wrapper">
+          <span class="card-tag">Authority</span>
+          <img src="../images/influence.JPG" alt="Digital Power">
+        </div>
         <h4>Digital Power</h4>
-        <p>Building authority online.</p>
+        <p>Building defensible intellectual property and organic authority online.</p>
+        <span class="card-read-more" style="color: #c77dff;">Read Story <i class="fas fa-arrow-right"></i></span>
       </div>
 
       <div class="card">
-        <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg">
-        <h4>Thought Leadership</h4>
-        <p>Owning your narrative.</p>
+        <div class="card-img-wrapper">
+          <span class="card-tag">Oration</span>
+          <img src="../images/insp1.JPG" alt="Public Discourse">
+        </div>
+        <h4>Public Discourse</h4>
+        <p>Mastering public speech, storytelling, and compelling presence.</p>
+        <span class="card-read-more" style="color: #c77dff;">Read Story <i class="fas fa-arrow-right"></i></span>
       </div>
 
       <div class="card">
-        <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg">
-        <h4>Brand Identity</h4>
-        <p>Clarity creates trust.</p>
+        <div class="card-img-wrapper">
+          <span class="card-tag">Movements</span>
+          <img src="../images/exclusive.JPG" alt="Cultural Movement">
+        </div>
+        <h4>Cultural Movement</h4>
+        <p>Turning personal conviction into community-driven action.</p>
+        <span class="card-read-more" style="color: #c77dff;">Read Story <i class="fas fa-arrow-right"></i></span>
       </div>
 
       <div class="card">
-        <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg">
-        <h4>Audience Growth</h4>
-        <p>Community over followers.</p>
+        <div class="card-img-wrapper">
+          <span class="card-tag">Equity</span>
+          <img src="../images/entrepreneur.JPG" alt="Brand Equity">
+        </div>
+        <h4>Brand Equity</h4>
+        <p>Translating audience trust into institutional partnership and equity.</p>
+        <span class="card-read-more" style="color: #c77dff;">Read Story <i class="fas fa-arrow-right"></i></span>
       </div>
 
       <div class="card">
-        <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg">
-        <h4>Legacy Building</h4>
-        <p>Impact beyond today.</p>
+        <div class="card-img-wrapper">
+          <span class="card-tag">Network</span>
+          <img src="../images/travel.JPG" alt="The Network Effect">
+        </div>
+        <h4>The Network Effect</h4>
+        <p>Curating high-trust peer circles and multiplying collective momentum.</p>
+        <span class="card-read-more" style="color: #c77dff;">Read Story <i class="fas fa-arrow-right"></i></span>
       </div>
 
     </div>
 
     <div class="progress-bar">
-      <div class="progress"></div>
+      <div class="progress" style="background: #c77dff;"></div>
     </div>
 
   </div>
 
-  <button class="arrow right" onclick="slideRight()">&#10095;</button>
+  <button class="arrow right" aria-label="Next slide">&#10095;</button>
 
 </section>
 
+<!-- FOOTER -->
 <footer>
+  <div class="footer-brand">
+    <h4>LiveGreater Magazine</h4>
+    <p>Inspiring growth, elevating mindset, and spotlighting culture-defining stories worldwide.</p>
+  </div>
+
   <div class="footer-links">
-    <a href="#">Home</a>
+    <a href="../index.html">Home</a>
     <a href="#">About Us</a>
     <a href="#">Services</a>
     <a href="#">Portfolio</a>
@@ -115,12 +150,15 @@
   </div>
 
   <div class="socials">
-    <i class="fab fa-facebook-f"></i>
-    <i class="fab fa-instagram"></i>
-    <i class="fab fa-tiktok"></i>
+    <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="https://tiktok.com" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
   </div>
+
+  <div class="copyright">&copy; 2026 LiveGreater Magazine. All rights reserved.</div>
+  <div class="developer-credit">Platform Designed & Developed by <strong>Tshiamo Mafojane (Richeey Designs)</strong> for <strong>Luigi Derbyshire</strong></div>
 </footer>
 
-<script src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\JS codes\influence.js"></script>
+<script src="../JS codes/main.js"></script>
 </body>
 </html>

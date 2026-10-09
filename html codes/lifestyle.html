@@ -2,29 +2,35 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lifestyle | LiveGreater Magazine</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@700&display=swap" rel="stylesheet">
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <link rel="stylesheet" href="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\css codes\lifestyle.css">
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="../css codes/lifestyle.css">
 </head>
 
 <body>
 
 <div class="bg-overlay"></div>
 
+<!-- HEADER -->
 <header>
-  <div class="logo">
-    <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg">
+  <a href="../index.html" class="logo">
+    <img src="../images/Logo.jpeg" alt="LiveGreater Magazine Logo">
     <h1>
       <span class="black">LiveGreater</span>
-      <span class="gold">Magazine</span>
+      <span class="gold" style="color: #e0a96d;">Magazine</span>
     </h1>
-  </div>
+  </a>
 
   <nav>
-    <a href="index.html">Home</a>
+    <a href="../index.html">Home</a>
     <a href="inspiration.html">Inspiration</a>
     <a href="health.html">Health</a>
     <a href="sports.html">Sports</a>
@@ -35,80 +41,109 @@
   </nav>
 </header>
 
+<!-- INTRO -->
 <section class="intro">
-  <h2>Curated Living</h2>
-  <p>Balance. Taste. Experience.</p>
+  <h2>Curated Living.</h2>
+  <div class="accent-line" style="background: #e0a96d;"></div>
+  <p>Balance. Taste. Experience. Designing an environment that sharpens your spirit.</p>
 </section>
 
+<!-- EXCLUSIVE FEATURE -->
 <section class="exclusive lifestyle-feature">
-  <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\exclusive.jpeg">
+  <img src="../images/travel.JPG" alt="Lifestyle Feature Cover">
   <div class="exclusive-text">
+    <span class="feature-badge" style="color: #e0a96d;"><i class="fas fa-compass"></i> CURATED LIVING</span>
     <h3>The Art of Intentional Living</h3>
     <p>
       Lifestyle is not about excess — it is about alignment.
       It’s choosing environments that elevate your thinking,
       routines that sharpen your focus, and experiences that
       enrich your spirit.
-      LiveGreater Magazine explores curated living —
-      from travel and wellness to daily rituals that
-      shape a powerful life.
+      LiveGreater Magazine explores curated living — from world travel and architectural serenity to daily rituals that shape a powerful life.
     </p>
-    <button onclick="location.href='#'">Read Article</button>
+    <button class="primary-btn" style="background: #e0a96d; color: #1c1307;"><i class="fas fa-book-open"></i> Read Article</button>
   </div>
 </section>
 
+<!-- SLIDER SECTION -->
 <section class="slider-section">
 
-  <button class="arrow left" onclick="slideLeft()">&#10094;</button>
+  <button class="arrow left" aria-label="Previous slide">&#10094;</button>
 
   <div class="slider-window">
     <div class="slider-track" id="sliderTrack">
 
       <div class="card">
-        <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg">
+        <div class="card-img-wrapper">
+          <span class="card-tag">Escape</span>
+          <img src="../images/travel.JPG" alt="Luxury Travel">
+        </div>
         <h4>Luxury Travel</h4>
-        <p>Experiences that expand perspective.</p>
+        <p>Immersive journeys that expand horizons and invite deep reflection.</p>
+        <span class="card-read-more" style="color: #e0a96d;">Read Story <i class="fas fa-arrow-right"></i></span>
       </div>
 
       <div class="card">
-        <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg">
-        <h4>Interior Design</h4>
-        <p>Spaces that inspire clarity.</p>
+        <div class="card-img-wrapper">
+          <span class="card-tag">Spaces</span>
+          <img src="../images/lifefstyle1.JPG" alt="Architectural Spaces">
+        </div>
+        <h4>Interior Architecture</h4>
+        <p>Minimalist sanctuary designs that foster focus, peace, and clarity.</p>
+        <span class="card-read-more" style="color: #e0a96d;">Read Story <i class="fas fa-arrow-right"></i></span>
       </div>
 
       <div class="card">
-        <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg">
+        <div class="card-img-wrapper">
+          <span class="card-tag">Rituals</span>
+          <img src="../images/health.JPG" alt="Daily Rituals">
+        </div>
         <h4>Daily Rituals</h4>
-        <p>Small habits, big impact.</p>
+        <p>The quiet morning routines that set the cadence for world-class output.</p>
+        <span class="card-read-more" style="color: #e0a96d;">Read Story <i class="fas fa-arrow-right"></i></span>
       </div>
 
       <div class="card">
-        <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg">
+        <div class="card-img-wrapper">
+          <span class="card-tag">Wellness</span>
+          <img src="../images/fitness.JPG" alt="Modern Wellness">
+        </div>
         <h4>Modern Wellness</h4>
-        <p>Mind and body alignment.</p>
+        <p>Mind-body integration through sensory balance and thoughtful restoration.</p>
+        <span class="card-read-more" style="color: #e0a96d;">Read Story <i class="fas fa-arrow-right"></i></span>
       </div>
 
       <div class="card">
-        <img src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\images\Logo.jpeg">
-        <h4>Fine Dining</h4>
-        <p>Taste as an experience.</p>
+        <div class="card-img-wrapper">
+          <span class="card-tag">Taste</span>
+          <img src="../images/exclusive.JPG" alt="Fine Gastronomy">
+        </div>
+        <h4>Culinary Craft</h4>
+        <p>Exploring flavor, culinary heritage, and dining as an artistic experience.</p>
+        <span class="card-read-more" style="color: #e0a96d;">Read Story <i class="fas fa-arrow-right"></i></span>
       </div>
 
     </div>
 
     <div class="progress-bar">
-      <div class="progress"></div>
+      <div class="progress" style="background: #e0a96d;"></div>
     </div>
 
   </div>
 
-  <button class="arrow right" onclick="slideRight()">&#10095;</button>
+  <button class="arrow right" aria-label="Next slide">&#10095;</button>
 
 </section>
 
+<!-- FOOTER -->
 <footer>
+  <div class="footer-brand">
+    <h4>LiveGreater Magazine</h4>
+    <p>Inspiring growth, elevating mindset, and spotlighting culture-defining stories worldwide.</p>
+  </div>
+
   <div class="footer-links">
-    <a href="#">Home</a>
+    <a href="../index.html">Home</a>
     <a href="#">About Us</a>
     <a href="#">Services</a>
     <a href="#">Portfolio</a>
@@ -116,12 +151,15 @@
   </div>
 
   <div class="socials">
-    <i class="fab fa-facebook-f"></i>
-    <i class="fab fa-instagram"></i>
-    <i class="fab fa-tiktok"></i>
+    <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="https://tiktok.com" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
   </div>
+
+  <div class="copyright">&copy; 2026 LiveGreater Magazine. All rights reserved.</div>
+  <div class="developer-credit">Platform Designed & Developed by <strong>Tshiamo Mafojane (Richeey Designs)</strong> for <strong>Luigi Derbyshire</strong></div>
 </footer>
 
-<script src="C:\Users\riche\OneDrive - CTU Career\Desktop\Luigi Website\JS codes\lifestyle.js"></script>
+<script src="../JS codes/main.js"></script>
 </body>
 </html>
