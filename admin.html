@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Studio | LiveGreater Magazine</title>
+
+  <!-- Google Fonts & Font Awesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <link rel="stylesheet" href="css codes/common.css">
+  <link rel="stylesheet" href="css codes/admin.css">
+</head>
+
+<body class="admin-body">
+
+<div class="bg-overlay"></div>
+
+<!-- ADMIN TOP NAVIGATION -->
+<header class="admin-header">
+  <div class="admin-header-brand">
+    <a href="index.html" class="logo">
+      <img src="images/Logo.jpeg" alt="LiveGreater Logo">
+      <h1>
+        <span class="black">LiveGreater</span>
+        <span class="purple">Admin Studio</span>
+      </h1>
+    </a>
+    <span class="admin-badge"><i class="fas fa-shield-alt"></i> Editorial Management</span>
+  </div>
+
+  <div class="admin-header-user" id="adminUserSection">
+    <div class="user-info">
+      <span class="user-name">Luigi Derbyshire</span>
+      <span class="user-role">Owner & Editor-in-Chief</span>
+    </div>
+    <div class="admin-nav-actions">
+      <a href="index.html" class="btn-secondary" title="View Public Site"><i class="fas fa-external-link-alt"></i> View Site</a>
+      <a href="vip.html" class="btn-secondary" title="View VIP Lounge"><i class="fas fa-crown"></i> VIP Lounge</a>
+      <button id="adminLogoutBtn" class="btn-danger"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+  </div>
+</header>
+
+<!-- ADMIN AUTH GUARD MODAL (IF NOT LOGGED IN) -->
+<div id="adminAuthModal" class="admin-auth-overlay">
+  <div class="admin-auth-card">
+    <div class="auth-card-header">
+      <img src="images/Logo.jpeg" alt="Logo">
+      <h2>LiveGreater Publisher Portal</h2>
+      <p class="tagline">Stay Ahead, with LiveGreater</p>
+      <div class="auth-subtext">Restricted to Luigi Derbyshire & Editorial Management</div>
+    </div>
+
+    <form id="adminLoginForm">
+      <div class="form-group">
+        <label><i class="fas fa-envelope"></i> Publisher Email</label>
+        <input type="email" id="adminEmailInput" value="admin@livegreater.com" required>
+      </div>
+      <div class="form-group">
+        <label><i class="fas fa-lock"></i> Master Password</label>
+        <input type="password" id="adminPasswordInput" value="luigi2026" required>
+      </div>
+      <button type="submit" class="primary-btn" style="width: 100%; justify-content: center;">
+        <i class="fas fa-unlock"></i> Access Admin Studio
+      </button>
+      <div class="quick-login-hint">
+        <span>Default Credentials: <code>admin@livegreater.com</code> / <code>luigi2026</code></span>
+      </div>
+    </form>
+    <div style="margin-top: 18px; text-align: center;">
+      <a href="index.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">
+        <i class="fas fa-arrow-left"></i> Return to Public Magazine
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN ADMIN CONTAINER -->
+<main class="admin-container" id="adminMainContainer" style="display: none;">
+
+  <!-- OVERVIEW HERO -->
+  <section class="admin-hero">
+    <div>
+      <h2>Welcome back, Luigi.</h2>
+      <p>Control articles, monitor real-time subscribers, and dispatch digital releases to the LiveGreater Circle.</p>
+    </div>
+    <div class="hero-actions">
+      <button id="openNewArticleModalBtn" class="primary-btn"><i class="fas fa-plus"></i> New Article</button>
+      <button id="openBroadcastModalBtn" class="btn-secondary"><i class="fas fa-paper-plane"></i> Send Newsletter</button>
+    </div>
+  </section>
+
+  <!-- METRIC CARDS -->
+  <section class="admin-metrics-grid">
+    <div class="metric-card">
+      <div class="metric-icon" style="background: rgba(123, 92, 255, 0.15); color: #7b5cff;"><i class="fas fa-users"></i></div>
+      <div class="metric-info">
+        <h3 id="metricSubscribers">0</h3>
+        <p>VIP Subscribers & Users</p>
+      </div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon" style="background: rgba(0, 255, 153, 0.15); color: #00ff99;"><i class="fas fa-newspaper"></i></div>
+      <div class="metric-info">
+        <h3 id="metricArticles">14</h3>
+        <p>Published Articles</p>
+      </div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon" style="background: rgba(255, 215, 0, 0.15); color: #ffd700;"><i class="fas fa-book-open"></i></div>
+      <div class="metric-info">
+        <h3>8</h3>
+        <p>Curated Categories</p>
+      </div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-icon" style="background: rgba(0, 180, 216, 0.15); color: #00b4d8;"><i class="fas fa-satellite-dish"></i></div>
+      <div class="metric-info">
+        <h3>Live</h3>
+        <p>Platform Status</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADMIN TABS -->
+  <div class="admin-nav-tabs">
+    <button class="tab-btn active" data-tab="articles"><i class="fas fa-file-alt"></i> Articles Studio</button>
+    <button class="tab-btn" data-tab="mailing"><i class="fas fa-envelope-open-text"></i> Mailing System</button>
+    <button class="tab-btn" data-tab="company"><i class="fas fa-info-circle"></i> Brand & Developer Creds</button>
+  </div>
+
+  <!-- TAB 1: ARTICLES STUDIO -->
+  <section class="tab-pane active" id="pane-articles">
+    <div class="pane-header">
+      <div>
+        <h3>Articles & Editorial Management</h3>
+        <p>Add, edit, and organize all stories appearing across the magazine and VIP lounge.</p>
+      </div>
+      <div class="pane-controls">
+        <input type="text" id="searchArticlesInput" placeholder="Search stories..." class="search-input">
+        <button id="addArticleTrigger" class="primary-btn"><i class="fas fa-plus"></i> Add Article</button>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Article Title</th>
+            <th>Category</th>
+            <th>Author</th>
+            <th>Read Time</th>
+            <th>Tier</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="articlesTableBody">
+          <!-- Populated by JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TAB 2: MAILING SYSTEM -->
+  <section class="tab-pane" id="pane-mailing">
+    <div class="pane-header">
+      <div>
+        <h3>Subscriber Database & Mailing Engine</h3>
+        <p>Full control over VIP members, newsletter subscribers, and automated releases.</p>
+      </div>
+      <div class="pane-controls">
+        <button id="exportCsvBtn" class="btn-secondary"><i class="fas fa-file-export"></i> Export CSV</button>
+        <button id="addSubscriberPromptBtn" class="primary-btn"><i class="fas fa-user-plus"></i> Add Subscriber</button>
+      </div>
+    </div>
+
+    <!-- BROADCAST COMPOSER CARD -->
+    <div class="broadcast-card">
+      <div class="broadcast-header">
+        <h4><i class="fas fa-paper-plane"></i> Dispatch Newsletter Release</h4>
+        <span>Instant alert to all registered subscribers</span>
+      </div>
+      <form id="broadcastEmailForm" class="broadcast-form">
+        <div class="form-group">
+          <label>Subject Line</label>
+          <input type="text" id="broadcastSubject" placeholder="e.g. LiveGreater Issue 02 is Live: Stay Ahead" required>
+        </div>
+        <div class="form-group">
+          <label>Newsletter Message Content</label>
+          <textarea id="broadcastMessage" rows="3" placeholder="Write your editorial dispatch or latest issue announcement..." required></textarea>
+        </div>
+        <button type="submit" class="primary-btn"><i class="fas fa-paper-plane"></i> Broadcast Release Preview</button>
+      </form>
+    </div>
+
+    <div class="table-container">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Subscriber / Member</th>
+            <th>Email Address</th>
+            <th>Date Registered</th>
+            <th>Access Tier</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="subscribersTableBody">
+          <!-- Populated by JavaScript -->
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- TAB 3: BRAND & CREDENTIALS -->
+  <section class="tab-pane" id="pane-company">
+    <div class="creds-grid">
+      <!-- OWNER CARD -->
+      <div class="creds-card">
+        <div class="creds-badge owner-badge"><i class="fas fa-crown"></i> Magazine Owner & Publisher</div>
+        <h3>Luigi Derbyshire</h3>
+        <p class="creds-desc">Owner & Founder of LiveGreater Magazine. Guiding the editorial vision and spotlighting stories that inspire growth, elevate mindset, and move culture forward.</p>
+        
+        <div class="creds-meta">
+          <div class="meta-item"><i class="fas fa-quote-left"></i> Tagline: <strong>"Stay Ahead, with LiveGreater"</strong></div>
+          <div class="meta-item"><i class="fab fa-instagram"></i> Instagram: <a href="https://www.instagram.com/livegreatermagazine?rpxt=MnJ3dDU0cjhucjIx" target="_blank">@livegreatermagazine</a></div>
+          <div class="meta-item"><i class="fab fa-whatsapp"></i> WhatsApp: <a href="https://wa.me/27630280064" target="_blank">+27 63 028 0064 (0630280064)</a></div>
+          <div class="meta-item"><i class="fas fa-map-marker-alt"></i> Location: <a href="https://maps.apple.com/place?address=60%20Wolmarans%20Street,%20Potchefstroom,%20North%20West,%202531,%20South%20Africa&coordinate=-26.716500,27.095500&name=60%20Wolmarans%20Street&map=explore" target="_blank">60 Wolmarans Street, Potchefstroom, North West, 2531, South Africa</a></div>
+        </div>
+      </div>
+
+      <!-- DEVELOPER CARD -->
+      <div class="creds-card dev-card">
+        <div class="creds-badge dev-badge"><i class="fas fa-code"></i> Engineering & Platform Design</div>
+        <h3>Tshiamo Richeey Mafojane</h3>
+        <p class="company-sub"><strong>Richeey Designs</strong> — Digital Agency & Development Company</p>
+        <p class="creds-desc">Lead software engineer and creative technologist behind the digital publication architecture, responsive layout, glassmorphic styling, and subscriber pipeline of LiveGreater Magazine.</p>
+
+        <div class="creds-meta">
+          <div class="meta-item"><i class="fas fa-building"></i> Company: <strong>Richeey Designs</strong></div>
+          <div class="meta-item"><i class="fas fa-user-check"></i> Developer: <strong>Tshiamo Richeey Mafojane</strong></div>
+          <div class="meta-item"><i class="fas fa-envelope"></i> Contact: <a href="mailto:richeey4@gmail.com">richeey4@gmail.com</a></div>
+          <div class="meta-item"><i class="fab fa-github"></i> GitHub: <a href="https://github.com/Tshiamo-RicheeyM" target="_blank">github.com/Tshiamo-RicheeyM</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- MODAL: ADD / EDIT ARTICLE -->
+<div id="articleModal" class="modal-overlay">
+  <div class="modal-dialog">
+    <button class="modal-close" id="closeArticleModalBtn">&times;</button>
+    <div class="modal-body">
+      <span class="article-category" id="articleModalBadge">Publisher Tool</span>
+      <h2 id="articleModalTitle" style="margin-top: 8px;">Create New Story</h2>
+      
+      <form id="saveArticleForm" style="margin-top: 20px;">
+        <input type="hidden" id="editArticleId">
+        
+        <div class="form-group">
+          <label>Story Headline</label>
+          <input type="text" id="articleTitleInput" placeholder="e.g. Master Your Mindset: The Psychology of Longevity" required>
+        </div>
+
+        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+          <div class="form-group" style="flex: 1;">
+            <label>Magazine Category</label>
+            <select id="articleCategorySelect" required>
+              <option value="Inspiration">Inspiration</option>
+              <option value="Health">Health</option>
+              <option value="Sports">Sports</option>
+              <option value="Influence">Influence</option>
+              <option value="Entrepreneurship">Entrepreneurship</option>
+              <option value="Lifestyle">Lifestyle</option>
+              <option value="Fashion & Art">Fashion & Art</option>
+              <option value="Exclusive Feature">Exclusive Feature</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>Author / Byline</label>
+            <input type="text" id="articleAuthorInput" value="Luigi Derbyshire" required>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>Reading Time</label>
+            <input type="text" id="articleReadtimeInput" value="5 min read" required>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+          <div class="form-group" style="flex: 2;">
+            <label>Cover Image Source</label>
+            <select id="articleImageSelect">
+              <option value="images/exclusive.JPG">images/exclusive.JPG (Exclusive Feature)</option>
+              <option value="images/insp1.JPG">images/insp1.JPG (Inspiration)</option>
+              <option value="images/health.JPG">images/health.JPG (Health & Wellness)</option>
+              <option value="images/sport.JPG">images/sport.JPG (Sports & Mohale)</option>
+              <option value="images/entrepreneur.JPG">images/entrepreneur.JPG (Entrepreneurship)</option>
+              <option value="images/fashion.JPG">images/fashion.JPG (Fashion & Art)</option>
+              <option value="images/influence.JPG">images/influence.JPG (Influence)</option>
+              <option value="images/travel.JPG">images/travel.JPG (Travel & Lifestyle)</option>
+              <option value="images/fitness.JPG">images/fitness.JPG (Fitness Training)</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>VIP Access Tier</label>
+            <select id="articleTierSelect">
+              <option value="All Readers">All Readers (Public)</option>
+              <option value="VIP Exclusive">VIP Subscribers Only</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Pull Quote / Tagline</label>
+          <input type="text" id="articleQuoteInput" placeholder="A memorable, bold statement from the feature...">
+        </div>
+
+        <div class="form-group">
+          <label>Story Content (Paragraphs)</label>
+          <textarea id="articleContentInput" rows="6" placeholder="Write full editorial article body here..." required></textarea>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+          <button type="button" class="btn-secondary" id="cancelArticleBtn">Cancel</button>
+          <button type="submit" class="primary-btn"><i class="fas fa-save"></i> Save & Publish Article</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="toast"></div>
+
+<!-- ADMIN LOGIC SCRIPT -->
+<script src="JS codes/admin.js"></script>
+</body>
+</html>

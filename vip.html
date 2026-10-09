@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIP Member Lounge | LiveGreater Magazine</title>
+
+  <!-- Typography & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <link rel="stylesheet" href="css codes/common.css">
+  <link rel="stylesheet" href="css codes/vip.css">
+</head>
+
+<body>
+
+<div class="bg-overlay"></div>
+
+<!-- HEADER -->
+<header>
+  <a href="index.html" class="logo">
+    <img src="images/Logo.jpeg" alt="LiveGreater Logo">
+    <h1>
+      <span class="black">LiveGreater</span>
+      <span class="gold">VIP Lounge</span>
+    </h1>
+  </a>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="html codes/inspiration.html">Inspiration</a>
+    <a href="html codes/health.html">Health</a>
+    <a href="html codes/sports.html">Sports</a>
+    <a href="html codes/influence.html">Influence</a>
+    <a href="html codes/entrepreneurship.html">Entrepreneurship</a>
+    <a href="html codes/lifestyle.html">Lifestyle</a>
+    <a href="html codes/fashionart.html">Fashion & Art</a>
+    <a href="vip.html" class="active"><i class="fas fa-crown"></i> VIP Club</a>
+  </nav>
+
+  <div class="nav-actions">
+    <div id="memberHeaderProfile" style="display: none; align-items: center; gap: 10px;">
+      <span id="memberHeaderGreeting" style="font-size: 0.88rem; color: #ffd700; font-weight: 600;"></span>
+      <button id="memberLogoutBtn" class="btn-secondary" style="padding: 6px 14px; font-size: 0.8rem;">
+        <i class="fas fa-sign-out-alt"></i> Sign Out
+      </button>
+    </div>
+    <a href="admin.html" class="admin-nav-btn"><i class="fas fa-shield-alt"></i> Publisher Admin</a>
+  </div>
+</header>
+
+<!-- VIP ACCESS SECTION -->
+<main class="vip-container">
+
+  <!-- STATE A: GATEKEEPER (NOT LOGGED IN) -->
+  <section id="vipGatekeeperSection" class="vip-gatekeeper">
+    <div class="gatekeeper-hero">
+      <span class="feature-badge" style="color: #ffd700;"><i class="fas fa-crown"></i> PRIVATE EDITORIAL ACCESS</span>
+      <h2>Stay Ahead, with LiveGreater.</h2>
+      <div class="accent-line" style="background: #ffd700;"></div>
+      <p>
+        The LiveGreater VIP Circle gives you priority access to exclusive uncut interviews,
+        high-resolution digital magazine issues, and curated executive briefings curated by Luigi Derbyshire.
+      </p>
+    </div>
+
+    <!-- SIGNUP / LOGIN TABS -->
+    <div class="vip-auth-card">
+      <div class="auth-tabs">
+        <button class="auth-tab-btn active" id="tabSignupBtn"><i class="fas fa-user-plus"></i> Join VIP Circle</button>
+        <button class="auth-tab-btn" id="tabSigninBtn"><i class="fas fa-sign-in-alt"></i> Member Sign In</button>
+      </div>
+
+      <!-- FORM: CREATE VIP ACCOUNT (AUTO-SAVES TO MAILING LIST) -->
+      <form id="vipSignupForm" class="auth-form-pane active">
+        <div class="form-instruction">
+          <i class="fas fa-check-circle" style="color: #00ff99;"></i>
+          Creating a VIP account automatically enrolls you in our priority mailing & release system.
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-user"></i> Full Name</label>
+          <input type="text" id="signupNameInput" placeholder="e.g. Alexander Vance" required>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-envelope"></i> Email Address</label>
+          <input type="email" id="signupEmailInput" placeholder="e.g. alexander@example.com" required>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-lock"></i> Create Password</label>
+          <input type="password" id="signupPasswordInput" placeholder="Minimum 4 characters" minlength="4" required>
+        </div>
+        <button type="submit" class="primary-btn" style="width: 100%; justify-content: center; background: #ffd700; color: #181203;">
+          <i class="fas fa-crown"></i> Create Account & Join Mailing System
+        </button>
+        <p class="auth-disclaimer">Zero spam. Unsubscribe anytime. Your email is securely preserved in the LiveGreater subscriber network.</p>
+      </form>
+
+      <!-- FORM: SIGN IN -->
+      <form id="vipSigninForm" class="auth-form-pane">
+        <div class="form-group">
+          <label><i class="fas fa-envelope"></i> Member Email</label>
+          <input type="email" id="signinEmailInput" placeholder="Enter your registered email" required>
+        </div>
+        <div class="form-group">
+          <label><i class="fas fa-lock"></i> Password</label>
+          <input type="password" id="signinPasswordInput" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="primary-btn" style="width: 100%; justify-content: center; background: #ffd700; color: #181203;">
+          <i class="fas fa-sign-in-alt"></i> Enter VIP Lounge
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <!-- STATE B: MEMBER EXCLUSIVE LOUNGE (LOGGED IN) -->
+  <section id="vipContentSection" class="vip-exclusive-content" style="display: none;">
+
+    <div class="member-welcome-banner">
+      <div class="welcome-text">
+        <span class="member-badge"><i class="fas fa-check-circle"></i> VERIFIED VIP MEMBER</span>
+        <h2 id="memberWelcomeHeading">Welcome, Member.</h2>
+        <p class="vip-sub">You are connected to the LiveGreater VIP Circle. Here is your exclusive, uncut editorial catalog.</p>
+      </div>
+      <div class="member-card-tag">
+        <div class="tag-title">Mailing System Status</div>
+        <div class="tag-val"><i class="fas fa-envelope-open-text"></i> Priority Delivery Active</div>
+      </div>
+    </div>
+
+    <!-- EXCLUSIVE FEATURE DROPS -->
+    <h3 class="section-title"><i class="fas fa-gem" style="color: #ffd700;"></i> Exclusive Issue Drops</h3>
+    <div class="vip-grid">
+
+      <!-- VIP CARD 1 -->
+      <div class="vip-card">
+        <div class="vip-card-img">
+          <span class="vip-pill">Issue 01 • Private Drop</span>
+          <img src="images/exclusive.JPG" alt="Exclusive Editorial">
+        </div>
+        <div class="vip-card-body">
+          <h4>The Architecture of High-Altitude Vision</h4>
+          <div class="vip-byline">By Luigi Derbyshire • 12 min read</div>
+          <p>The unabridged transcript and deep dive into the routines of creators constructing the culture of tomorrow.</p>
+          <button class="primary-btn open-article-btn" data-key="exclusive"><i class="fas fa-book-reader"></i> Read Full Issue</button>
+        </div>
+      </div>
+
+      <!-- VIP CARD 2 -->
+      <div class="vip-card">
+        <div class="vip-card-img">
+          <span class="vip-pill">Mohale Thekiso • Uncut</span>
+          <img src="images/sport.JPG" alt="Sports Feature">
+        </div>
+        <div class="vip-card-body">
+          <h4>Stick, Stride & Mindset: Behind the Turf</h4>
+          <div class="vip-byline">By Tshiamo Richeey Mafojane • 8 min read</div>
+          <p>Exclusive athletic breakdown: pitch awareness, tactical patience, and the mental composure required to dominate.</p>
+          <button class="primary-btn open-article-btn" data-key="mohale"><i class="fas fa-book-reader"></i> Read Feature</button>
+        </div>
+      </div>
+
+      <!-- VIP CARD 3 -->
+      <div class="vip-card">
+        <div class="vip-card-img">
+          <span class="vip-pill">Founder Blueprints</span>
+          <img src="images/entrepreneur.JPG" alt="Entrepreneur Feature">
+        </div>
+        <div class="vip-card-body">
+          <h4>Scaling Under Pressure: The African Founder Dossier</h4>
+          <div class="vip-byline">By Marcus Chen & Editorial • 10 min read</div>
+          <p>Confidential case studies on unit economics, team building, and operating with asymmetric speed.</p>
+          <button class="primary-btn open-article-btn" data-key="entrepreneurship"><i class="fas fa-book-reader"></i> Read Dossier</button>
+        </div>
+      </div>
+
+      <!-- VIP CARD 4 -->
+      <div class="vip-card">
+        <div class="vip-card-img">
+          <span class="vip-pill">Human Optimization</span>
+          <img src="images/fitness.JPG" alt="Fitness and Health">
+        </div>
+        <div class="vip-card-body">
+          <h4>The Executive Protocol: Sleep Architecture & Hormetic Load</h4>
+          <div class="vip-byline">By Dr. Elena Vance • 7 min read</div>
+          <p>Actionable biomarker tracking, hot/cold exposure protocols, and longevity frameworks for leaders.</p>
+          <button class="primary-btn open-article-btn" data-key="health"><i class="fas fa-book-reader"></i> Read Protocol</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DIGITAL MAGAZINE ISSUE DOWNLOAD -->
+    <div class="digital-issue-banner">
+      <div class="digital-issue-info">
+        <span class="feature-badge" style="color: #00ff99;"><i class="fas fa-file-pdf"></i> DIGITAL PUBLICATION ASSET</span>
+        <h3>Download LiveGreater Issue 01 (Digital Edition)</h3>
+        <p>Complete offline interactive issue formatted for iPad, Kindle, and print fidelity.</p>
+      </div>
+      <a href="Documents/📄 QUOTATION.pdf" download="LiveGreater_Issue_01.pdf" class="primary-btn" style="background: #00ff99; color: #04140b;">
+        <i class="fas fa-download"></i> Download Issue Asset (.PDF)
+      </a>
+    </div>
+
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <h4>LiveGreater Magazine</h4>
+    <p>Stay Ahead, with LiveGreater — Inspiring growth, elevating mindset, and spotlighting culture-defining stories worldwide.</p>
+  </div>
+
+  <div class="footer-contact-details" style="margin-bottom: 24px; color: var(--text-muted); font-size: 0.9rem;">
+    <p><i class="fab fa-whatsapp" style="color: #00ff99;"></i> WhatsApp: <a href="https://wa.me/27630280064" target="_blank" style="color: #fff; text-decoration: none;">+27 63 028 0064 (0630280064)</a></p>
+    <p style="margin-top: 6px;"><i class="fas fa-map-marker-alt" style="color: var(--primary);"></i> Location: <a href="https://maps.apple.com/place?address=60%20Wolmarans%20Street,%20Potchefstroom,%20North%20West,%202531,%20South%20Africa&coordinate=-26.716500,27.095500&name=60%20Wolmarans%20Street&map=explore" target="_blank" style="color: #fff; text-decoration: none;">60 Wolmarans Street, Potchefstroom, North West, 2531, South Africa</a></p>
+  </div>
+
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="vip.html">VIP Lounge</a>
+    <a href="admin.html">Admin Portal</a>
+    <a href="#">About Us</a>
+    <a href="#">Contact Us</a>
+  </div>
+
+  <div class="socials">
+    <a href="https://www.instagram.com/livegreatermagazine?rpxt=MnJ3dDU0cjhucjIx" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="https://wa.me/27630280064" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+  </div>
+
+  <div class="copyright">&copy; 2026 LiveGreater Magazine. All rights reserved.</div>
+  <div class="developer-credit">
+    Platform Designed & Developed by <strong>Tshiamo Richeey Mafojane</strong> — <strong>Richeey Designs</strong> for <strong>Luigi Derbyshire</strong>
+  </div>
+</footer>
+
+<div class="toast"></div>
+
+<!-- SCRIPTS -->
+<script src="JS codes/main.js"></script>
+<script src="JS codes/vip.js"></script>
+</body>
+</html>

@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initMobileNav();
   initArticleReader();
   initNewsletter();
-  initAdminPortal();
+  initFloatingWhatsApp();
   initFooterModals();
 });
 
@@ -106,7 +106,6 @@ function initSlider() {
     }
   }
 
-  // Attach button events safely
   if (leftBtn) {
     leftBtn.onclick = (e) => {
       e.preventDefault();
@@ -123,11 +122,9 @@ function initSlider() {
     };
   }
 
-  // Hover pause
   sliderWindow.addEventListener("mouseenter", stopAutoSlide);
   sliderWindow.addEventListener("mouseleave", startAutoSlide);
 
-  // Touch Swipe
   let touchStartX = 0;
   let touchEndX = 0;
 
@@ -147,7 +144,6 @@ function initSlider() {
     startAutoSlide();
   }, { passive: true });
 
-  // Window resize re-alignment
   let resizeTimeout;
   window.addEventListener("resize", () => {
     clearTimeout(resizeTimeout);
@@ -156,7 +152,6 @@ function initSlider() {
     }, 150);
   });
 
-  // Keyboard navigation when hovering
   window.addEventListener("keydown", (e) => {
     if (e.key === "ArrowLeft") {
       slideLeft();
@@ -167,7 +162,6 @@ function initSlider() {
     }
   });
 
-  // Init
   updateSlider();
   startAutoSlide();
 }
@@ -194,7 +188,6 @@ function initMobileNav() {
     toggleBtn.innerHTML = isOpen ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
   });
 
-  // Close when clicking nav links
   nav.querySelectorAll("a").forEach(link => {
     link.addEventListener("click", () => {
       nav.classList.remove("nav-open");
@@ -202,7 +195,6 @@ function initMobileNav() {
     });
   });
 
-  // Close when clicking outside
   document.addEventListener("click", (e) => {
     if (!header.contains(e.target) && nav.classList.contains("nav-open")) {
       nav.classList.remove("nav-open");
@@ -223,22 +215,22 @@ const ARTICLES_DATABASE = {
     image: "images/exclusive.JPG",
     quote: "True influence is never about noise — it is about the quiet gravity of undeniable execution.",
     paragraphs: [
-      "In an era where attention is fleeting and digital noise is at an all-time peak, the creators who truly endure are those with an unwavering commitment to depth. LiveGreater was founded on the belief that greatness is not an accidental milestone, but a rigorous, daily discipline.",
-      "Across design, business, athletics, and the arts, visionaries operate under a fundamentally distinct framework: they don't react to current culture, they construct its next iteration. They recognize that every project is a testament to standards, identity, and narrative power.",
-      "When we speak to founders and creators across the globe, a recurring pattern emerges: relentless elimination of distraction, extreme clarity of purpose, and an appetite for calculated risk. As we step into this next chapter of LiveGreater Magazine, our mission is to deliver the blueprints that empower you to elevate your own orbit."
+      "In an era where attention is fleeting and digital noise is at an all-time peak, the creators who truly endure are those with an unwavering commitment to depth. LiveGreater was founded by Luigi Derbyshire on the belief that greatness is not an accidental milestone, but a rigorous, daily discipline.",
+      "Across design, business, athletics, and the arts, visionaries operate under a fundamentally distinct framework: they don't react to current culture, they construct its next iteration. Stay ahead, with LiveGreater.",
+      "When we speak to founders and creators across South Africa and the globe, a recurring pattern emerges: relentless elimination of distraction, extreme clarity of purpose, and an appetite for calculated risk."
     ]
   },
   "mohale": {
     category: "Sports",
     title: "Redefining Elite: Mohale Thekiso",
-    author: "Tshiamo Mafojane • Sports & Performance Editor",
+    author: "Tshiamo Richeey Mafojane • Sports & Performance Editor",
     readTime: "5 min read",
     image: "images/sport.JPG",
     quote: "The turf doesn't care about excuses. Every stride either closes the gap to greatness or surrenders it.",
     paragraphs: [
       "Mohale Thekiso is not just an elite hockey talent — he represents a transformative shift in athletic mindset, tactical poise, and leadership under pressure.",
       "From grueling dawn training sessions to international high-stakes fixtures, Mohale plays with an instinctive precision. His stick handling is fluid, but behind that effortless aesthetic lies thousands of hours of calculated repetition.",
-      "Beyond the game itself, Mohale is rewriting what it means to be a modern African athlete: articulate, culturally grounded, and relentlessly ambitious. His story continues to inspire the next generation of competitors who refuse to accept ordinary standards."
+      "Beyond the game itself, Mohale is rewriting what it means to be a modern African athlete: articulate, culturally grounded, and relentlessly ambitious."
     ]
   },
   "health": {
@@ -322,7 +314,6 @@ const ARTICLES_DATABASE = {
 };
 
 function initArticleReader() {
-  // Inject modal into DOM if not present
   let modal = document.getElementById("articleReaderModal");
   if (!modal) {
     modal = document.createElement("div");
@@ -354,12 +345,9 @@ function initArticleReader() {
   const bylineEl = modal.querySelector(".article-byline");
   const textEl = modal.querySelector(".article-text");
 
-  function openArticle(key, customData = null) {
+  window.openArticleModal = function(key, customData = null) {
     const data = customData || ARTICLES_DATABASE[key] || ARTICLES_DATABASE["exclusive"];
-
-    // Detect path depth (subfolder vs root)
     const isSubfolder = window.location.pathname.includes("/html codes/") || window.location.pathname.includes("/html%20codes/");
-    const imgPrefix = isSubfolder ? "../" : "";
 
     let finalImg = data.image;
     if (finalImg && !finalImg.startsWith("http") && !finalImg.startsWith("../") && isSubfolder) {
@@ -381,13 +369,13 @@ function initArticleReader() {
     } else if (data.content) {
       bodyHTML += `<p>${data.content}</p>`;
     } else {
-      bodyHTML += `<p>Full digital issue coverage coming in LiveGreater Release 1.0.</p>`;
+      bodyHTML += `<p>Stay Ahead, with LiveGreater Magazine.</p>`;
     }
 
     textEl.innerHTML = bodyHTML;
     modal.classList.add("active");
     document.body.style.overflow = "hidden";
-  }
+  };
 
   function closeModal() {
     modal.classList.remove("active");
@@ -404,42 +392,39 @@ function initArticleReader() {
     }
   });
 
-  // Attach to Read Exclusive & Read Article buttons
   document.querySelectorAll(".exclusive button, .primary-btn, button[onclick*='location']").forEach(btn => {
+    if (btn.classList.contains("open-article-btn")) return;
     btn.removeAttribute("onclick");
     btn.addEventListener("click", (e) => {
       e.preventDefault();
-      // Determine article from context
       const pagePath = window.location.pathname.toLowerCase();
-      if (pagePath.includes("sport")) openArticle("mohale");
-      else if (pagePath.includes("health")) openArticle("health");
-      else if (pagePath.includes("insp")) openArticle("inspiration");
-      else if (pagePath.includes("entrepreneur")) openArticle("entrepreneurship");
-      else if (pagePath.includes("lifestyle")) openArticle("lifestyle");
-      else if (pagePath.includes("fashion")) openArticle("fashion");
-      else if (pagePath.includes("influence")) openArticle("influence");
-      else openArticle("exclusive");
+      if (pagePath.includes("sport")) window.openArticleModal("mohale");
+      else if (pagePath.includes("health")) window.openArticleModal("health");
+      else if (pagePath.includes("insp")) window.openArticleModal("inspiration");
+      else if (pagePath.includes("entrepreneur")) window.openArticleModal("entrepreneurship");
+      else if (pagePath.includes("lifestyle")) window.openArticleModal("lifestyle");
+      else if (pagePath.includes("fashion")) window.openArticleModal("fashion");
+      else if (pagePath.includes("influence")) window.openArticleModal("influence");
+      else window.openArticleModal("exclusive");
     });
   });
 
-  // Attach to Slider Cards
-  document.querySelectorAll(".card").forEach((card, idx) => {
+  document.querySelectorAll(".card").forEach((card) => {
     card.addEventListener("click", () => {
       const cardTitle = card.querySelector("h4")?.textContent || "Story";
       const cardDesc = card.querySelector("p")?.textContent || "";
       const cardImg = card.querySelector("img")?.getAttribute("src") || "";
 
-      openArticle(null, {
+      window.openArticleModal(null, {
         category: "Magazine Issue",
         title: cardTitle,
-        author: "LiveGreater Editorial • Curated Series",
+        author: "LiveGreater Editorial • Luigi Derbyshire",
         readTime: "4 min read",
         image: cardImg,
         quote: cardDesc,
         paragraphs: [
-          `This story explores the core dynamics of ${cardTitle.toLowerCase()} — examining how elite visionaries cultivate daily mastery and lead transformative movements.`,
-          `${cardDesc} At LiveGreater Magazine, we delve into the untold aspects of the journey, highlighting tactical intelligence, emotional fortitude, and relentless drive.`,
-          "Explore the complete issue releases by subscribing to our VIP circle below or exploring related categories across the magazine."
+          `This story explores the core dynamics of ${cardTitle.toLowerCase()} — examining how elite visionaries cultivate daily mastery and stay ahead of culture.`,
+          `${cardDesc} Stay ahead, with LiveGreater Magazine. Explore the full catalog by visiting our dedicated VIP Lounge.`
         ]
       });
     });
@@ -447,29 +432,9 @@ function initArticleReader() {
 }
 
 /* ==========================================================================
-   4. NEWSLETTER SUBSCRIPTION (Phase 1 Deliverable)
+   4. NEWSLETTER SUBSCRIPTION (AUTO-ENROLLS INTO MAILING SYSTEM)
    ========================================================================== */
 function initNewsletter() {
-  // Inject newsletter section into page if not already present before footer
-  const footer = document.querySelector("footer");
-  if (footer && !document.querySelector(".newsletter-section")) {
-    const newsletter = document.createElement("section");
-    newsletter.className = "newsletter-section";
-    newsletter.innerHTML = `
-      <div class="newsletter-content">
-        <span class="feature-badge"><i class="fas fa-crown"></i> VIP CIRCLE</span>
-        <h3>Join the LiveGreater Circle</h3>
-        <p>Subscribe to receive priority access to new magazine issues, exclusive editorial drops, and founder interviews.</p>
-        <form class="newsletter-form" id="newsletterForm">
-          <input type="email" placeholder="Enter your email address" required aria-label="Email address">
-          <button type="submit"><i class="fas fa-paper-plane"></i> Subscribe</button>
-        </form>
-        <div class="newsletter-note">Zero spam. Pure editorial inspiration. Unsubscribe anytime.</div>
-      </div>
-    `;
-    footer.parentNode.insertBefore(newsletter, footer);
-  }
-
   const form = document.getElementById("newsletterForm");
   if (form) {
     form.addEventListener("submit", (e) => {
@@ -484,210 +449,39 @@ function initNewsletter() {
         localStorage.setItem("livegreater_subscribers", JSON.stringify(subscribers));
       }
 
+      // Also save to member accounts list
+      const accounts = JSON.parse(localStorage.getItem("livegreater_member_accounts") || "[]");
+      if (!accounts.some(a => a.email.toLowerCase() === email.toLowerCase())) {
+        accounts.push({
+          name: email.split("@")[0],
+          email: email,
+          tier: "VIP Circle",
+          status: "Active",
+          date: new Date().toISOString().slice(0, 10)
+        });
+        localStorage.setItem("livegreater_member_accounts", JSON.stringify(accounts));
+      }
+
       input.value = "";
-      showToast("Welcome to LiveGreater! You're now subscribed to issue releases.", "fa-check-circle");
+      showToast("Welcome to LiveGreater! You are subscribed to the priority mailing system.", "fa-crown");
     });
   }
 }
 
 /* ==========================================================================
-   5. ADMIN PORTAL MODAL (Phase 1 Deliverable)
+   5. FLOATING WHATSAPP BUTTON (0630280064)
    ========================================================================== */
-function initAdminPortal() {
-  // Add Admin Portal link in nav actions or footer
-  const nav = document.querySelector("nav");
-  if (nav && !document.querySelector(".admin-nav-btn")) {
-    const adminBtn = document.createElement("button");
-    adminBtn.className = "admin-nav-btn";
-    adminBtn.innerHTML = '<i class="fas fa-lock"></i> Admin';
-    adminBtn.title = "LiveGreater Publisher Admin Portal";
-    adminBtn.addEventListener("click", openAdminModal);
-    nav.appendChild(adminBtn);
-  }
+function initFloatingWhatsApp() {
+  if (document.querySelector(".whatsapp-float")) return;
 
-  let adminModal = document.getElementById("adminPortalModal");
-  if (!adminModal) {
-    adminModal = document.createElement("div");
-    adminModal.id = "adminPortalModal";
-    adminModal.className = "modal-overlay";
-    adminModal.innerHTML = `
-      <div class="modal-dialog">
-        <button class="modal-close" aria-label="Close admin portal">&times;</button>
-        <div class="modal-body" style="padding-top: 28px;">
-          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-            <div>
-              <span class="article-category">Publisher Studio</span>
-              <h2 style="margin-top: 6px;">LiveGreater Admin Portal</h2>
-            </div>
-            <span style="font-size: 0.85rem; color: #00ff99; background: rgba(0,255,153,0.1); padding: 4px 12px; border-radius: 20px;">
-              <i class="fas fa-circle" style="font-size: 0.6rem;"></i> Phase 1 System Live
-            </span>
-          </div>
-
-          <div class="admin-tabs">
-            <button class="admin-tab active" data-tab="dashboard">Dashboard</button>
-            <button class="admin-tab" data-tab="upload">Upload Article</button>
-            <button class="admin-tab" data-tab="subscribers">Subscribers</button>
-          </div>
-
-          <!-- TAB 1: DASHBOARD -->
-          <div class="tab-content active" id="tab-dashboard">
-            <div class="admin-stat-grid">
-              <div class="stat-box">
-                <div class="num" id="statSubscribersCount">0</div>
-                <div class="lbl">Active Subscribers</div>
-              </div>
-              <div class="stat-box">
-                <div class="num">8</div>
-                <div class="lbl">Published Sections</div>
-              </div>
-              <div class="stat-box">
-                <div class="num">100%</div>
-                <div class="lbl">Platform Health</div>
-              </div>
-            </div>
-            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.1);">
-              <h4 style="margin-bottom: 8px;"><i class="fas fa-info-circle"></i> Project Status: Phase 1 Launch</h4>
-              <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.5;">
-                Client: Luigi Derbyshire • Platform: LiveGreater Magazine • Developed by Tshiamo Mafojane (Richeey Designs).
-                All core magazine categories, mobile navigation, responsive sliders, reading modals, and subscriber collection are fully integrated.
-              </p>
-            </div>
-          </div>
-
-          <!-- TAB 2: UPLOAD ARTICLE -->
-          <div class="tab-content" id="tab-upload">
-            <form id="articleUploadForm">
-              <div class="form-group">
-                <label>Article Title</label>
-                <input type="text" placeholder="e.g. The Science of High Performance" required id="artTitle">
-              </div>
-              <div style="display: flex; gap: 14px; flex-wrap: wrap;">
-                <div class="form-group" style="flex: 1;">
-                  <label>Category</label>
-                  <select id="artCategory">
-                    <option>Inspiration</option>
-                    <option>Health</option>
-                    <option>Sports</option>
-                    <option>Influence</option>
-                    <option>Entrepreneurship</option>
-                    <option>Lifestyle</option>
-                    <option>Fashion & Art</option>
-                  </select>
-                </div>
-                <div class="form-group" style="flex: 1;">
-                  <label>Author</label>
-                  <input type="text" placeholder="e.g. Luigi Derbyshire" value="Luigi Derbyshire" id="artAuthor">
-                </div>
-              </div>
-              <div class="form-group">
-                <label>Article Lead / Summary</label>
-                <textarea rows="3" placeholder="Brief editorial synopsis..." id="artSummary"></textarea>
-              </div>
-              <button type="submit" class="primary-btn" style="width: 100%; justify-content: center;">
-                <i class="fas fa-cloud-upload-alt"></i> Publish Draft to Magazine
-              </button>
-            </form>
-          </div>
-
-          <!-- TAB 3: SUBSCRIBERS -->
-          <div class="tab-content" id="tab-subscribers">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-              <h4>Subscriber List (Local Database)</h4>
-              <button id="clearSubsBtn" style="background: none; border: 1px solid rgba(255,255,255,0.2); color: var(--text-muted); padding: 4px 10px; border-radius: 8px; font-size: 0.8rem; cursor: pointer;">
-                Clear All
-              </button>
-            </div>
-            <div style="overflow-x: auto; max-height: 250px;">
-              <table class="subscribers-table">
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Email Address</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody id="subscribersTableBody">
-                  <tr>
-                    <td colspan="3" style="text-align: center; color: var(--text-muted);">No subscribers yet.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    `;
-    document.body.appendChild(adminModal);
-  }
-
-  const closeBtn = adminModal.querySelector(".modal-close");
-  closeBtn.addEventListener("click", () => adminModal.classList.remove("active"));
-  adminModal.addEventListener("click", (e) => {
-    if (e.target === adminModal) adminModal.classList.remove("active");
-  });
-
-  // Tab switching
-  const tabs = adminModal.querySelectorAll(".admin-tab");
-  const contents = adminModal.querySelectorAll(".tab-content");
-  tabs.forEach(tab => {
-    tab.addEventListener("click", () => {
-      tabs.forEach(t => t.classList.remove("active"));
-      contents.forEach(c => c.classList.remove("active"));
-      tab.classList.add("active");
-      const target = adminModal.querySelector(`#tab-${tab.dataset.tab}`);
-      if (target) target.classList.add("active");
-    });
-  });
-
-  // Handle article draft submit
-  const uploadForm = adminModal.querySelector("#articleUploadForm");
-  if (uploadForm) {
-    uploadForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const title = adminModal.querySelector("#artTitle").value;
-      const cat = adminModal.querySelector("#artCategory").value;
-      showToast(`Article "${title}" published draft to ${cat}!`, "fa-check");
-      uploadForm.reset();
-    });
-  }
-
-  // Handle clear subscribers
-  const clearSubsBtn = adminModal.querySelector("#clearSubsBtn");
-  if (clearSubsBtn) {
-    clearSubsBtn.addEventListener("click", () => {
-      localStorage.removeItem("livegreater_subscribers");
-      refreshSubscribersList();
-      showToast("Subscriber list cleared.", "fa-trash");
-    });
-  }
-
-  function openAdminModal() {
-    refreshSubscribersList();
-    adminModal.classList.add("active");
-  }
-
-  function refreshSubscribersList() {
-    const subs = JSON.parse(localStorage.getItem("livegreater_subscribers") || '["luigi@livegreater.com", "editorial@richeeydesigns.com"]');
-    const tbody = adminModal.querySelector("#subscribersTableBody");
-    const countEl = adminModal.querySelector("#statSubscribersCount");
-
-    if (countEl) countEl.textContent = subs.length;
-
-    if (!subs.length) {
-      tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted); padding: 20px;">No subscribers registered yet.</td></tr>';
-      return;
-    }
-
-    tbody.innerHTML = subs.map((email, idx) => `
-      <tr>
-        <td>${idx + 1}</td>
-        <td>${email}</td>
-        <td><span style="color: #00ff99; font-size: 0.8rem;"><i class="fas fa-check"></i> Subscribed</span></td>
-      </tr>
-    `).join("");
-  }
+  const waBtn = document.createElement("a");
+  waBtn.className = "whatsapp-float";
+  waBtn.href = "https://wa.me/27630280064";
+  waBtn.target = "_blank";
+  waBtn.rel = "noopener";
+  waBtn.setAttribute("aria-label", "Contact LiveGreater on WhatsApp");
+  waBtn.innerHTML = '<i class="fab fa-whatsapp"></i><span class="wa-tooltip">Chat with LiveGreater</span>';
+  document.body.appendChild(waBtn);
 }
 
 /* ==========================================================================
@@ -734,24 +528,28 @@ function initFooterModals() {
       titleEl.textContent = "About LiveGreater Magazine";
       contentEl.innerHTML = `
         <p><strong>LiveGreater Magazine</strong> is a premier digital publication platform focused on inspiration, lifestyle, influence, and exclusive editorial storytelling.</p>
-        <p>Founded by <strong>Luigi Derbyshire</strong> and developed in partnership with <strong>Tshiamo Mafojane (Richeey Designs)</strong>, the magazine spotlights visionary thinkers, elite athletes, cultural pioneers, and bold entrepreneurs shaping our collective future.</p>
-        <p>Our editorial mandate is uncompromising: to deliver high-aesthetic stories that inspire growth, elevate mindset, and push culture forward.</p>
+        <p><strong>Tagline:</strong> <em>"Stay Ahead, with LiveGreater"</em></p>
+        <p><strong>Owner & Publisher:</strong> Luigi Derbyshire</p>
+        <p><strong>Digital Agency & Platform Engineering:</strong> Tshiamo Richeey Mafojane (Richeey Designs)</p>
+        <p>Our mandate is uncompromising: to deliver high-aesthetic stories that inspire growth, elevate mindset, and push culture forward.</p>
       `;
     } else if (type.includes("contact")) {
       titleEl.textContent = "Contact Editorial & Inquiries";
       contentEl.innerHTML = `
-        <p>Have an editorial pitch, sponsorship inquiry, or partnership opportunity? Reach out to the LiveGreater team:</p>
+        <p>Reach out to the LiveGreater team for editorial pitches, VIP inquiries, or partnership opportunities:</p>
         <div style="background: rgba(255,255,255,0.05); padding: 18px; border-radius: 12px; margin: 16px 0;">
-          <p><i class="fas fa-envelope" style="color: var(--primary); margin-right: 10px;"></i> <strong>Editorial:</strong> editorial@livegreater.com</p>
-          <p><i class="fas fa-crown" style="color: var(--primary); margin-right: 10px;"></i> <strong>Publisher:</strong> luigi@livegreater.com</p>
-          <p><i class="fas fa-code" style="color: var(--primary); margin-right: 10px;"></i> <strong>Development:</strong> Tshiamo Mafojane (Richeey Designs)</p>
+          <p><i class="fab fa-whatsapp" style="color: #00ff99; margin-right: 10px;"></i> <strong>WhatsApp:</strong> <a href="https://wa.me/27630280064" target="_blank" style="color: #fff;">+27 63 028 0064 (0630280064)</a></p>
+          <p><i class="fab fa-instagram" style="color: #c77dff; margin-right: 10px;"></i> <strong>Instagram:</strong> <a href="https://www.instagram.com/livegreatermagazine?rpxt=MnJ3dDU0cjhucjIx" target="_blank" style="color: #fff;">@livegreatermagazine</a></p>
+          <p><i class="fas fa-map-marker-alt" style="color: #ff3344; margin-right: 10px;"></i> <strong>Headquarters:</strong> <a href="https://maps.apple.com/place?address=60%20Wolmarans%20Street,%20Potchefstroom,%20North%20West,%202531,%20South%20Africa&coordinate=-26.716500,27.095500&name=60%20Wolmarans%20Street&map=explore" target="_blank" style="color: #fff;">60 Wolmarans Street, Potchefstroom, North West, 2531, South Africa</a></p>
+          <p><i class="fas fa-crown" style="color: #ffd700; margin-right: 10px;"></i> <strong>Publisher:</strong> Luigi Derbyshire</p>
+          <p><i class="fas fa-code" style="color: #7b5cff; margin-right: 10px;"></i> <strong>Developer:</strong> Tshiamo Richeey Mafojane (Richeey Designs)</p>
         </div>
       `;
     } else {
       titleEl.textContent = "LiveGreater Services & Portfolio";
       contentEl.innerHTML = `
         <p>LiveGreater Magazine provides bespoke multimedia editorial publishing, brand collaborations, executive features, and curated digital drops.</p>
-        <p>Designed and engineered by Richeey Designs, our digital architecture supports scalable publication, multimedia features, subscriber pipelines, and monetized digital issues.</p>
+        <p>Digital Architecture & Development engineered by <strong>Tshiamo Richeey Mafojane (Richeey Designs)</strong>.</p>
       `;
     }
 

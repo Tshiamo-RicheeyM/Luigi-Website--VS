@@ -1083,3 +1083,52 @@ footer {
     grid-template-columns: 1fr;
   }
 }
+
+/* ==========================================================================
+   FLOATING WHATSAPP BUTTON (0630280064)
+   ========================================================================== */
+.whatsapp-float {
+  position: fixed;
+  bottom: 26px;
+  left: 26px;
+  background: #25d366;
+  color: #ffffff;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.85rem;
+  box-shadow: 0 10px 25px rgba(37, 211, 102, 0.45);
+  z-index: 999;
+  text-decoration: none;
+  transition: var(--transition-smooth);
+}
+
+.whatsapp-float:hover {
+  transform: scale(1.1) translateY(-3px);
+  box-shadow: 0 14px 34px rgba(37, 211, 102, 0.65);
+  color: #ffffff;
+}
+
+.wa-tooltip {
+  position: absolute;
+  left: 68px;
+  background: rgba(14, 12, 26, 0.95);
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 14px;
+  font-size: 0.82rem;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: var(--transition-smooth);
+  border: 1px solid rgba(37, 211, 102, 0.3);
+}
+
+.whatsapp-float:hover .wa-tooltip {
+  opacity: 1;
+  transform: translateX(0);
+}

@@ -1,0 +1,336 @@
+/* ==========================================================================
+   LIVEGREATER MAGAZINE - VIP MEMBERS LOUNGE STYLESHEET
+   Prepared for Luigi Derbyshire | Developed by Richeey Designs
+   ========================================================================== */
+
+.vip-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 5% 80px;
+}
+
+/* ==========================================================================
+   GATEKEEPER HERO & AUTH
+   ========================================================================== */
+.vip-gatekeeper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.gatekeeper-hero {
+  max-width: 700px;
+  margin-bottom: 36px;
+}
+
+.gatekeeper-hero h2 {
+  font-family: var(--font-heading);
+  font-size: 2.8rem;
+  line-height: 1.15;
+  margin-top: 10px;
+  margin-bottom: 12px;
+}
+
+.gatekeeper-hero p {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.vip-auth-card {
+  background: rgba(18, 15, 30, 0.85);
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  border-radius: 24px;
+  padding: 38px 32px;
+  max-width: 460px;
+  width: 100%;
+  backdrop-filter: blur(18px);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 215, 0, 0.1);
+  text-align: left;
+}
+
+.auth-tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 24px;
+}
+
+.auth-tab-btn {
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  padding: 12px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  transition: var(--transition-smooth);
+}
+
+.auth-tab-btn.active {
+  color: #ffd700;
+}
+
+.auth-tab-btn.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #ffd700;
+}
+
+.auth-form-pane {
+  display: none;
+}
+
+.auth-form-pane.active {
+  display: block;
+}
+
+.form-instruction {
+  background: rgba(0, 255, 153, 0.08);
+  border: 1px solid rgba(0, 255, 153, 0.2);
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 0.82rem;
+  color: #e0fbf0;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.auth-disclaimer {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 14px;
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   MEMBER EXCLUSIVE CONTENT
+   ========================================================================== */
+.member-welcome-banner {
+  background: linear-gradient(135deg, rgba(30, 25, 50, 0.8) 0%, rgba(15, 12, 28, 0.8) 100%);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  border-radius: 24px;
+  padding: 36px 40px;
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+
+.member-badge {
+  background: rgba(255, 215, 0, 0.15);
+  color: #ffd700;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.welcome-text h2 {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  margin-bottom: 6px;
+}
+
+.vip-sub {
+  color: var(--text-muted);
+  font-size: 1rem;
+  max-width: 600px;
+}
+
+.member-card-tag {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 16px 22px;
+  border-radius: 16px;
+  text-align: right;
+}
+
+.tag-title {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+.tag-val {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #00ff99;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* VIP Grid */
+.vip-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 24px;
+  margin-bottom: 45px;
+}
+
+.vip-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition-smooth);
+}
+
+.vip-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(255, 215, 0, 0.4);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+}
+
+.vip-card-img {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+
+.vip-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.vip-card:hover .vip-card-img img {
+  transform: scale(1.05);
+}
+
+.vip-pill {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  color: #ffd700;
+  padding: 4px 12px;
+  border-radius: 14px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.vip-card-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.vip-card-body h4 {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  line-height: 1.3;
+  margin-bottom: 6px;
+}
+
+.vip-byline {
+  font-size: 0.8rem;
+  color: #ffd700;
+  margin-bottom: 12px;
+}
+
+.vip-card-body p {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  flex: 1;
+}
+
+.vip-card-body button {
+  width: 100%;
+  justify-content: center;
+  background: rgba(255, 215, 0, 0.15);
+  border: 1px solid #ffd700;
+  color: #ffd700;
+}
+
+.vip-card-body button:hover {
+  background: #ffd700;
+  color: #120e03;
+}
+
+/* Digital Issue Download Banner */
+.digital-issue-banner {
+  background: linear-gradient(135deg, rgba(10, 25, 20, 0.8) 0%, rgba(5, 15, 10, 0.8) 100%);
+  border: 1px solid rgba(0, 255, 153, 0.3);
+  border-radius: 20px;
+  padding: 32px 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.digital-issue-info h3 {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.digital-issue-info p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+  .gatekeeper-hero h2 {
+    font-size: 2.1rem;
+  }
+  .member-welcome-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 26px 20px;
+  }
+  .member-card-tag {
+    text-align: left;
+    width: 100%;
+  }
+  .digital-issue-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
