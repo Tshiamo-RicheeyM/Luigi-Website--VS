@@ -5,6 +5,7 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   seedInitialData();
+  renderDynamicCoverPage();
   initSlider();
   initMobileNav();
   initArticleReader();
@@ -683,12 +684,65 @@ function initGatekeeperModal() {
 }
 
 /* ==========================================================================
+   4.5 DYNAMIC COVER PAGE SYNCHRONIZATION (FROM ADMIN STUDIO)
+   ========================================================================== */
+function renderDynamicCoverPage() {
+  const isHomePage = window.location.pathname.endsWith("index.html") || window.location.pathname.endsWith("/") || window.location.pathname.endsWith("Luigi-Website--VS") || window.location.pathname.endsWith("Luigi-Website--VS/");
+
+  let covers = [];
+  try {
+    covers = JSON.parse(localStorage.getItem("livegreater_cover_pages") || "[]");
+  } catch (e) {
+    covers = [];
+  }
+
+  // Find active front cover
+  let activeCover = covers.find(c => c.isFrontCover);
+  if (!activeCover && covers.length > 0) {
+    activeCover = covers[0];
+  }
+
+  if (activeCover && isHomePage) {
+    const exclusiveSection = document.querySelector(".exclusive");
+    if (exclusiveSection) {
+      const img = exclusiveSection.querySelector("img");
+      const badge = exclusiveSection.querySelector(".feature-badge");
+      const h3 = exclusiveSection.querySelector("h3");
+      const p = exclusiveSection.querySelector("p");
+
+      if (img && activeCover.image) img.src = activeCover.image;
+      if (badge && activeCover.badge) badge.innerHTML = `<i class="fas fa-crown"></i> ${escapeHtml(activeCover.badge)}`;
+      if (h3 && activeCover.title) h3.textContent = activeCover.title;
+      if (p && (activeCover.summary || activeCover.content)) {
+        p.textContent = activeCover.summary || (activeCover.content.slice(0, 180) + "...");
+      }
+
+      // Register this active cover into the database so reader modal can display full story
+      ARTICLES_DATABASE["custom_front_cover"] = {
+        category: activeCover.category || "Exclusive Feature",
+        title: activeCover.title,
+        author: activeCover.author || "Luigi Derbyshire",
+        readTime: activeCover.readTime || "6 min read",
+        image: activeCover.image || "images/exclusive.JPG",
+        quote: activeCover.quote || "",
+        paragraphs: activeCover.content ? [activeCover.content] : [activeCover.summary || "Stay Ahead, with LiveGreater."]
+      };
+    }
+  }
+}
+
+/* ==========================================================================
    5. ARTICLE INTERACTION HANDLER:
       - BIG ARTICLE (EXCLUSIVE) -> GATED FOR VIP & ADMIN ONLY
       - BOTTOM SLIDESHOW CARDS -> PUBLIC & OPEN TO ANY PERSON
    ========================================================================== */
 function initArticleInteractions() {
   function getPageStoryKey() {
+    const isHomePage = window.location.pathname.endsWith("index.html") || window.location.pathname.endsWith("/") || window.location.pathname.endsWith("Luigi-Website--VS") || window.location.pathname.endsWith("Luigi-Website--VS/");
+    if (isHomePage && ARTICLES_DATABASE["custom_front_cover"]) {
+      return "custom_front_cover";
+    }
+
     const pagePath = window.location.pathname.toLowerCase();
     if (pagePath.includes("sport")) return "mohale";
     if (pagePath.includes("health")) return "health";
@@ -893,3 +947,9 @@ function showToast(message, iconClass = "fa-check-circle") {
     toast.classList.remove("show");
   }, 3800);
 }
+
+function escapeHtml(str) {
+  if (!str) return "";
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+

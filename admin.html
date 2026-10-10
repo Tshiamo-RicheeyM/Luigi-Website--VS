@@ -86,10 +86,11 @@
   <section class="admin-hero">
     <div>
       <h2>Welcome back, Luigi.</h2>
-      <p>Control stories, view registered client passwords, oversee the subscriber mailing database, and manage security settings.</p>
+      <p>Upload magazine cover pages, edit lead features, view registered client passwords, and manage the subscriber mailing engine.</p>
     </div>
     <div class="hero-actions">
-      <button id="openNewArticleModalBtn" class="primary-btn"><i class="fas fa-plus"></i> New Article</button>
+      <button id="openNewCoverModalBtn" class="primary-btn"><i class="fas fa-cloud-upload-alt"></i> Upload Cover Page</button>
+      <button id="openNewArticleModalBtn" class="btn-secondary"><i class="fas fa-plus"></i> New Article</button>
       <button id="openBroadcastModalBtn" class="btn-secondary"><i class="fas fa-paper-plane"></i> Send Newsletter</button>
     </div>
   </section>
@@ -104,38 +105,57 @@
       </div>
     </div>
     <div class="metric-card">
+      <div class="metric-icon" style="background: rgba(255, 215, 0, 0.15); color: #ffd700;"><i class="fas fa-images"></i></div>
+      <div class="metric-info">
+        <h3 id="metricCovers">2</h3>
+        <p>Cover Pages & Issues</p>
+      </div>
+    </div>
+    <div class="metric-card">
       <div class="metric-icon" style="background: rgba(0, 255, 153, 0.15); color: #00ff99;"><i class="fas fa-newspaper"></i></div>
       <div class="metric-info">
-        <h3 id="metricArticles">14</h3>
+        <h3 id="metricArticles">8</h3>
         <p>Published Articles</p>
       </div>
     </div>
     <div class="metric-card">
-      <div class="metric-icon" style="background: rgba(255, 215, 0, 0.15); color: #ffd700;"><i class="fas fa-key"></i></div>
+      <div class="metric-icon" style="background: rgba(0, 180, 216, 0.15); color: #00b4d8;"><i class="fas fa-key"></i></div>
       <div class="metric-info">
         <h3 id="metricAccounts">0</h3>
         <p>Client Password Records</p>
-      </div>
-    </div>
-    <div class="metric-card">
-      <div class="metric-icon" style="background: rgba(0, 180, 216, 0.15); color: #00b4d8;"><i class="fas fa-shield-alt"></i></div>
-      <div class="metric-info">
-        <h3>Encrypted</h3>
-        <p>Master Security</p>
       </div>
     </div>
   </section>
 
   <!-- ADMIN TABS -->
   <div class="admin-nav-tabs">
-    <button class="tab-btn active" data-tab="articles"><i class="fas fa-file-alt"></i> Articles Studio</button>
+    <button class="tab-btn active" data-tab="covers"><i class="fas fa-images"></i> Cover Pages Studio</button>
+    <button class="tab-btn" data-tab="articles"><i class="fas fa-file-alt"></i> Articles Studio</button>
     <button class="tab-btn" data-tab="mailing"><i class="fas fa-envelope-open-text"></i> Mailing & Client Passwords</button>
     <button class="tab-btn" data-tab="security"><i class="fas fa-key"></i> Password Manager</button>
     <button class="tab-btn" data-tab="company"><i class="fas fa-info-circle"></i> Brand & Developer Creds</button>
   </div>
 
-  <!-- TAB 1: ARTICLES STUDIO -->
-  <section class="tab-pane active" id="pane-articles">
+  <!-- TAB 1: COVER PAGES STUDIO (UPLOAD, EDIT, DELETE COVER PAGES) -->
+  <section class="tab-pane active" id="pane-covers">
+    <div class="pane-header">
+      <div>
+        <h3>Magazine Cover Pages & Hero Features</h3>
+        <p>Upload new cover pages, edit headlines, set the active homepage front cover, or delete covers.</p>
+      </div>
+      <div class="pane-controls">
+        <button id="addCoverPageTrigger" class="primary-btn"><i class="fas fa-cloud-upload-alt"></i> Upload New Cover Page</button>
+      </div>
+    </div>
+
+    <!-- COVER CARDS GRID -->
+    <div class="cover-cards-grid" id="coverPagesGrid">
+      <!-- Populated dynamically by JavaScript -->
+    </div>
+  </section>
+
+  <!-- TAB 2: ARTICLES STUDIO -->
+  <section class="tab-pane" id="pane-articles">
     <div class="pane-header">
       <div>
         <h3>Articles & Editorial Management</h3>
@@ -166,7 +186,7 @@
     </div>
   </section>
 
-  <!-- TAB 2: MAILING SYSTEM & CLIENT PASSWORDS RECORD -->
+  <!-- TAB 3: MAILING SYSTEM & CLIENT PASSWORDS RECORD -->
   <section class="tab-pane" id="pane-mailing">
     <div class="pane-header">
       <div>
@@ -219,7 +239,7 @@
     </div>
   </section>
 
-  <!-- TAB 3: ADMIN PASSWORD MANAGER -->
+  <!-- TAB 4: ADMIN PASSWORD MANAGER -->
   <section class="tab-pane" id="pane-security">
     <div class="creds-grid">
       <div class="creds-card" style="max-width: 600px;">
@@ -256,7 +276,7 @@
     </div>
   </section>
 
-  <!-- TAB 4: BRAND & CREDENTIALS -->
+  <!-- TAB 5: BRAND & CREDENTIALS -->
   <section class="tab-pane" id="pane-company">
     <div class="creds-grid">
       <!-- OWNER CARD -->
@@ -291,6 +311,123 @@
   </section>
 
 </main>
+
+<!-- MODAL: UPLOAD / EDIT MAGAZINE COVER PAGE -->
+<div id="coverPageModal" class="modal-overlay">
+  <div class="modal-dialog">
+    <button class="modal-close" id="closeCoverModalBtn">&times;</button>
+    <div class="modal-body">
+      <span class="article-category" id="coverModalBadge">Cover Studio</span>
+      <h2 id="coverModalTitle" style="margin-top: 8px;">Upload Magazine Cover Page</h2>
+
+      <form id="saveCoverPageForm" style="margin-top: 20px;">
+        <input type="hidden" id="editCoverPageId">
+
+        <!-- COVER IMAGE UPLOAD / PREVIEW -->
+        <div class="form-group">
+          <label><i class="fas fa-image" style="color: #ffd700;"></i> Cover Artwork Image (Upload or Pick)</label>
+          <div class="upload-dropzone" id="coverDropzone">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p><strong>Click to upload cover artwork</strong> or drag & drop here</p>
+            <span>Supports JPG, PNG, WEBP high-resolution cover photos</span>
+            <input type="file" id="coverFileInput" accept="image/*" style="display: none;">
+          </div>
+          <div id="coverPreviewWrap" style="display: none; margin-top: 12px; position: relative;">
+            <img id="coverPreviewImg" src="" alt="Cover preview" style="width: 100%; max-height: 240px; object-fit: cover; border-radius: 12px; border: 1px solid rgba(255,215,0,0.35);">
+            <button type="button" id="changeCoverImgBtn" class="btn-danger" style="position: absolute; top: 12px; right: 12px; padding: 5px 12px; font-size: 0.8rem;">
+              <i class="fas fa-redo"></i> Replace Artwork
+            </button>
+          </div>
+          <div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 0.82rem; color: var(--text-muted); white-space: nowrap;">Or pick from presets:</span>
+            <select id="coverPresetSelect" style="flex: 1; padding: 7px 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #fff; font-size: 0.85rem;">
+              <option value="">-- Choose Preset or Keep Uploaded Image --</option>
+              <option value="images/exclusive.JPG">images/exclusive.JPG (Issue 01 Exclusive)</option>
+              <option value="images/sport.JPG">images/sport.JPG (Mohale Sports Cover)</option>
+              <option value="images/entrepreneur.JPG">images/entrepreneur.JPG (Entrepreneurship)</option>
+              <option value="images/fashion.JPG">images/fashion.JPG (Fashion & Art)</option>
+              <option value="images/insp1.JPG">images/insp1.JPG (Inspiration Cover)</option>
+              <option value="images/travel.JPG">images/travel.JPG (Lifestyle Travel)</option>
+              <option value="images/health.JPG">images/health.JPG (Health Cover)</option>
+              <option value="images/fitness.JPG">images/fitness.JPG (Fitness Training)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- HEADLINE & BADGE -->
+        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+          <div class="form-group" style="flex: 2;">
+            <label>Cover Headline / Title</label>
+            <input type="text" id="coverTitleInput" placeholder="e.g. Inside the Minds of Creators Shaping Culture" required>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>Issue Tag / Badge</label>
+            <input type="text" id="coverBadgeInput" placeholder="e.g. ISSUE 02 EXCLUSIVE" value="ISSUE EXCLUSIVE" required>
+          </div>
+        </div>
+
+        <!-- CATEGORY & AUTHOR -->
+        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+          <div class="form-group" style="flex: 1;">
+            <label>Magazine Category</label>
+            <select id="coverCategorySelect" required>
+              <option value="Exclusive Feature">Exclusive Feature</option>
+              <option value="Sports">Sports</option>
+              <option value="Entrepreneurship">Entrepreneurship</option>
+              <option value="Inspiration">Inspiration</option>
+              <option value="Health">Health</option>
+              <option value="Lifestyle">Lifestyle</option>
+              <option value="Fashion & Art">Fashion & Art</option>
+              <option value="Influence">Influence</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>Author / Byline</label>
+            <input type="text" id="coverAuthorInput" value="Luigi Derbyshire" required>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>VIP Access Tier</label>
+            <select id="coverTierSelect">
+              <option value="VIP Exclusive">VIP Exclusive Only</option>
+              <option value="All Readers">All Readers (Public)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- ACTIVE FRONT COVER CHECKBOX -->
+        <div style="background: rgba(255, 215, 0, 0.08); border: 1px solid rgba(255, 215, 0, 0.25); border-radius: 10px; padding: 12px 16px; margin: 10px 0;">
+          <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #ffd700; margin: 0; font-size: 0.92rem;">
+            <input type="checkbox" id="coverIsFrontCheckbox" checked style="width: 18px; height: 18px; accent-color: #ffd700;">
+            <span><strong>Set as Active Front Cover on Website</strong> (displays as the big lead feature on index.html)</span>
+          </label>
+        </div>
+
+        <!-- SUMMARY -->
+        <div class="form-group">
+          <label>Cover Summary (Displayed on front-page card)</label>
+          <textarea id="coverSummaryInput" rows="2" placeholder="Brief 1-2 sentence lead description..." required></textarea>
+        </div>
+
+        <!-- PULL QUOTE -->
+        <div class="form-group">
+          <label>Pull Quote (Optional)</label>
+          <input type="text" id="coverQuoteInput" placeholder="A memorable pull quote from the story...">
+        </div>
+
+        <!-- FULL STORY CONTENT -->
+        <div class="form-group">
+          <label>Full Cover Story Content (Reader Modal Body)</label>
+          <textarea id="coverContentInput" rows="5" placeholder="Full article paragraphs for readers to read when unlocked..." required></textarea>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+          <button type="button" class="btn-secondary" id="cancelCoverBtn">Cancel</button>
+          <button type="submit" class="primary-btn"><i class="fas fa-save"></i> Save & Publish Cover Page</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 <!-- MODAL: ADD / EDIT ARTICLE -->
 <div id="articleModal" class="modal-overlay">
@@ -332,27 +469,41 @@
           </div>
         </div>
 
-        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
-          <div class="form-group" style="flex: 2;">
-            <label>Cover Image Source</label>
-            <select id="articleImageSelect">
-              <option value="images/exclusive.JPG">images/exclusive.JPG (Exclusive Feature)</option>
-              <option value="images/insp1.JPG">images/insp1.JPG (Inspiration)</option>
-              <option value="images/health.JPG">images/health.JPG (Health & Wellness)</option>
-              <option value="images/sport.JPG">images/sport.JPG (Sports & Mohale)</option>
-              <option value="images/entrepreneur.JPG">images/entrepreneur.JPG (Entrepreneurship)</option>
-              <option value="images/fashion.JPG">images/fashion.JPG (Fashion & Art)</option>
-              <option value="images/influence.JPG">images/influence.JPG (Influence)</option>
-              <option value="images/travel.JPG">images/travel.JPG (Travel & Lifestyle)</option>
-              <option value="images/fitness.JPG">images/fitness.JPG (Fitness Training)</option>
-            </select>
+        <!-- STORY COVER IMAGE UPLOAD / PREVIEW -->
+        <div class="form-group">
+          <label><i class="fas fa-image" style="color: #ffd700;"></i> Story Cover Image (Upload or Pick)</label>
+          <div class="upload-dropzone" id="articleDropzone" style="padding: 16px;">
+            <i class="fas fa-cloud-upload-alt" style="font-size: 1.8rem;"></i>
+            <p style="font-size: 0.9rem; margin: 4px 0;"><strong>Upload cover photo from computer</strong> or browse</p>
+            <input type="file" id="articleFileInput" accept="image/*" style="display: none;">
           </div>
-          <div class="form-group" style="flex: 1;">
-            <label>VIP Access Tier</label>
-            <select id="articleTierSelect">
-              <option value="All Readers">All Readers (Public)</option>
-              <option value="VIP Exclusive">VIP Subscribers Only</option>
-            </select>
+          <div id="articlePreviewWrap" style="display: none; margin-top: 10px; position: relative;">
+            <img id="articlePreviewImg" src="" alt="Article cover preview" style="width: 100%; max-height: 180px; object-fit: cover; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2);">
+            <button type="button" id="changeArticleImgBtn" class="btn-danger" style="position: absolute; top: 8px; right: 8px; padding: 4px 10px; font-size: 0.75rem;">
+              <i class="fas fa-redo"></i> Change Photo
+            </button>
+          </div>
+          <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px;">
+            <div class="form-group" style="flex: 2; margin-bottom: 0;">
+              <select id="articleImageSelect">
+                <option value="">-- Choose from preset images or keep uploaded --</option>
+                <option value="images/exclusive.JPG">images/exclusive.JPG (Exclusive Feature)</option>
+                <option value="images/insp1.JPG">images/insp1.JPG (Inspiration)</option>
+                <option value="images/health.JPG">images/health.JPG (Health & Wellness)</option>
+                <option value="images/sport.JPG">images/sport.JPG (Sports & Mohale)</option>
+                <option value="images/entrepreneur.JPG">images/entrepreneur.JPG (Entrepreneurship)</option>
+                <option value="images/fashion.JPG">images/fashion.JPG (Fashion & Art)</option>
+                <option value="images/influence.JPG">images/influence.JPG (Influence)</option>
+                <option value="images/travel.JPG">images/travel.JPG (Travel & Lifestyle)</option>
+                <option value="images/fitness.JPG">images/fitness.JPG (Fitness Training)</option>
+              </select>
+            </div>
+            <div class="form-group" style="flex: 1; margin-bottom: 0;">
+              <select id="articleTierSelect">
+                <option value="All Readers">All Readers (Public)</option>
+                <option value="VIP Exclusive">VIP Subscribers Only</option>
+              </select>
+            </div>
           </div>
         </div>
 

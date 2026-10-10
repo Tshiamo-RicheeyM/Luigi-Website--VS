@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   seedInitialData();
   initAdminAuth();
   initAdminTabs();
+  initCoverPagesStudio();
   initArticlesStudio();
   initMailingSystem();
   initPasswordManager();
@@ -143,6 +144,7 @@ function initAdminAuth() {
     if (authModal) authModal.style.display = "none";
     if (mainContainer) mainContainer.style.display = "block";
     updateMetrics();
+    renderCoverPages();
     renderArticles();
     renderSubscribers();
   }
@@ -173,7 +175,332 @@ function initAdminTabs() {
 }
 
 /* ==========================================================================
-   3. ARTICLES STUDIO (ADD, EDIT, DELETE, SEARCH)
+   3. COVER PAGES STUDIO (UPLOAD, EDIT, DELETE & SET FRONT COVER)
+   ========================================================================== */
+const DEFAULT_COVER_PAGES = [
+  {
+    id: "cover-main-1",
+    title: "Inside the Minds of Creators Shaping Culture",
+    badge: "ISSUE 01 EXCLUSIVE",
+    category: "Exclusive Feature",
+    author: "Luigi Derbyshire • Founder & Editor-in-Chief",
+    readTime: "6 min read",
+    tier: "VIP Exclusive",
+    image: "images/exclusive.JPG",
+    isFrontCover: true,
+    summary: "An in-depth look inside the routines, mental frameworks, and audacious ambitions of world-class leaders, creators, and visionaries redefining tomorrow. Stay ahead, with LiveGreater.",
+    quote: "True influence is never about noise — it is about the quiet gravity of undeniable execution.",
+    content: "In an era where attention is fleeting and digital noise is at an all-time peak, the creators who truly endure are those with an unwavering commitment to depth. LiveGreater was founded by Luigi Derbyshire on the belief that greatness is not an accidental milestone, but a rigorous, daily discipline."
+  },
+  {
+    id: "cover-sports-2",
+    title: "Redefining Elite Through Stick, Stride and Story",
+    badge: "COVER STORY",
+    category: "Sports",
+    author: "Tshiamo Richeey Mafojane • Sports & Performance Editor",
+    readTime: "5 min read",
+    tier: "VIP Exclusive",
+    image: "images/sport.JPG",
+    isFrontCover: false,
+    summary: "Mohale Thekiso is not just a hockey player — he is a symbol of discipline, resilience, and narrative power. Every stride on the turf is calculated.",
+    quote: "The turf doesn't care about excuses. Every stride either closes the gap to greatness or surrenders it.",
+    content: "Mohale Thekiso is not just an elite hockey talent — he represents a transformative shift in athletic mindset, tactical poise, and leadership under pressure. From grueling dawn training sessions to international high-stakes fixtures, Mohale plays with an instinctive precision."
+  }
+];
+
+function getCoverPages() {
+  const saved = localStorage.getItem("livegreater_cover_pages");
+  if (!saved) {
+    localStorage.setItem("livegreater_cover_pages", JSON.stringify(DEFAULT_COVER_PAGES));
+    return DEFAULT_COVER_PAGES;
+  }
+  try {
+    return JSON.parse(saved);
+  } catch (e) {
+    return DEFAULT_COVER_PAGES;
+  }
+}
+
+function saveCoverPages(list) {
+  localStorage.setItem("livegreater_cover_pages", JSON.stringify(list));
+  updateMetrics();
+  renderCoverPages();
+}
+
+let uploadedCoverImageData = "";
+
+function initCoverPagesStudio() {
+  const modal = document.getElementById("coverPageModal");
+  const openBtn = document.getElementById("openNewCoverModalBtn");
+  const triggerBtn = document.getElementById("addCoverPageTrigger");
+  const closeBtn = document.getElementById("closeCoverModalBtn");
+  const cancelBtn = document.getElementById("cancelCoverBtn");
+  const form = document.getElementById("saveCoverPageForm");
+
+  // Upload elements
+  const dropzone = document.getElementById("coverDropzone");
+  const fileInput = document.getElementById("coverFileInput");
+  const previewWrap = document.getElementById("coverPreviewWrap");
+  const previewImg = document.getElementById("coverPreviewImg");
+  const changeImgBtn = document.getElementById("changeCoverImgBtn");
+  const presetSelect = document.getElementById("coverPresetSelect");
+
+  function openNewCoverModal() {
+    form.reset();
+    document.getElementById("editCoverPageId").value = "";
+    document.getElementById("coverModalTitle").textContent = "Upload Magazine Cover Page";
+    document.getElementById("coverModalBadge").textContent = "New Cover Artwork";
+    uploadedCoverImageData = "";
+    if (previewWrap) previewWrap.style.display = "none";
+    if (dropzone) dropzone.style.display = "block";
+    modal.classList.add("active");
+  }
+
+  if (openBtn) openBtn.addEventListener("click", openNewCoverModal);
+  if (triggerBtn) triggerBtn.addEventListener("click", openNewCoverModal);
+
+  function closeModal() {
+    modal.classList.remove("active");
+  }
+
+  if (closeBtn) closeBtn.addEventListener("click", closeModal);
+  if (cancelBtn) cancelBtn.addEventListener("click", closeModal);
+
+  // File Upload Handlers (Click to browse or Drag & Drop)
+  if (dropzone && fileInput) {
+    dropzone.addEventListener("click", () => fileInput.click());
+
+    dropzone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropzone.classList.add("drag-over");
+    });
+
+    dropzone.addEventListener("dragleave", () => {
+      dropzone.classList.remove("drag-over");
+    });
+
+    dropzone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropzone.classList.remove("drag-over");
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleCoverFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    fileInput.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files[0]) {
+        handleCoverFile(e.target.files[0]);
+      }
+    });
+  }
+
+  function handleCoverFile(file) {
+    if (!file.type.startsWith("image/")) {
+      showToast("Please select a valid image file (PNG, JPG, WEBP).", "fa-exclamation-triangle");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      uploadedCoverImageData = event.target.result;
+      if (previewImg) previewImg.src = uploadedCoverImageData;
+      if (previewWrap) previewWrap.style.display = "block";
+      if (dropzone) dropzone.style.display = "none";
+      if (presetSelect) presetSelect.value = "";
+      showToast("Cover artwork uploaded & preview ready!", "fa-check");
+    };
+    reader.readAsDataURL(file);
+  }
+
+  if (changeImgBtn) {
+    changeImgBtn.addEventListener("click", () => {
+      uploadedCoverImageData = "";
+      if (previewWrap) previewWrap.style.display = "none";
+      if (dropzone) dropzone.style.display = "block";
+      if (fileInput) fileInput.value = "";
+    });
+  }
+
+  if (presetSelect) {
+    presetSelect.addEventListener("change", () => {
+      if (presetSelect.value) {
+        uploadedCoverImageData = presetSelect.value;
+        if (previewImg) previewImg.src = presetSelect.value;
+        if (previewWrap) previewWrap.style.display = "block";
+        if (dropzone) dropzone.style.display = "none";
+      }
+    });
+  }
+
+  // Handle Save / Publish Cover Page
+  if (form) {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const editId = document.getElementById("editCoverPageId").value;
+      const title = document.getElementById("coverTitleInput").value.trim();
+      const badge = document.getElementById("coverBadgeInput").value.trim() || "EXCLUSIVE COVER";
+      const category = document.getElementById("coverCategorySelect").value;
+      const author = document.getElementById("coverAuthorInput").value.trim() || "Luigi Derbyshire";
+      const tier = document.getElementById("coverTierSelect").value;
+      const isFront = document.getElementById("coverIsFrontCheckbox").checked;
+      const summary = document.getElementById("coverSummaryInput").value.trim();
+      const quote = document.getElementById("coverQuoteInput").value.trim();
+      const content = document.getElementById("coverContentInput").value.trim();
+
+      const image = uploadedCoverImageData || "images/exclusive.JPG";
+
+      let covers = getCoverPages();
+
+      if (isFront) {
+        // Set all other covers to false
+        covers.forEach(c => c.isFrontCover = false);
+      }
+
+      if (editId) {
+        const idx = covers.findIndex(c => c.id === editId);
+        if (idx !== -1) {
+          covers[idx] = {
+            id: editId,
+            title,
+            badge,
+            category,
+            author,
+            readTime: "6 min read",
+            tier,
+            image,
+            isFrontCover: isFront,
+            summary,
+            quote,
+            content
+          };
+          saveCoverPages(covers);
+          showToast(`Cover page "${title}" updated successfully!`, "fa-check");
+        }
+      } else {
+        const newCover = {
+          id: "cover-" + Date.now(),
+          title,
+          badge,
+          category,
+          author,
+          readTime: "6 min read",
+          tier,
+          image,
+          isFrontCover: isFront,
+          summary,
+          quote,
+          content
+        };
+        covers.unshift(newCover);
+        saveCoverPages(covers);
+        showToast(`Cover page "${title}" uploaded & published live!`, "fa-check-circle");
+      }
+
+      closeModal();
+    });
+  }
+}
+
+function renderCoverPages() {
+  const container = document.getElementById("coverPagesGrid");
+  if (!container) return;
+
+  const covers = getCoverPages();
+  if (!covers.length) {
+    container.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted); background: rgba(255,255,255,0.03); border-radius: 16px;">
+        <i class="fas fa-images" style="font-size: 2.5rem; color: #ffd700; margin-bottom: 12px; display: block;"></i>
+        <p>No cover pages uploaded yet. Click "Upload New Cover Page" to publish one.</p>
+      </div>
+    `;
+    return;
+  }
+
+  container.innerHTML = covers.map(c => `
+    <div class="cover-card ${c.isFrontCover ? 'front-active' : ''}">
+      <div class="cover-card-img-wrap">
+        <img src="${c.image || 'images/exclusive.JPG'}" alt="${escapeHtml(c.title)}">
+        <span class="cover-card-badge">${escapeHtml(c.badge || 'FEATURE')}</span>
+        ${c.isFrontCover ? '<span class="cover-card-active-tag"><i class="fas fa-star"></i> Active Front Cover</span>' : ''}
+      </div>
+      <div class="cover-card-body">
+        <h4>${escapeHtml(c.title)}</h4>
+        <div class="cover-card-meta">
+          <span style="color: #7b5cff; font-weight: 600;">${c.category}</span> • <span>${escapeHtml(c.author)}</span>
+        </div>
+        <p class="cover-card-summary">${escapeHtml(c.summary || c.content || '')}</p>
+        <div class="cover-card-actions">
+          ${!c.isFrontCover ? `<button class="action-btn-pill set-active" onclick="setFrontCover('${c.id}')" title="Set as live front cover on homepage"><i class="fas fa-star"></i> Set as Front Cover</button>` : ''}
+          <button class="action-btn-pill edit" onclick="editCoverPage('${c.id}')"><i class="fas fa-edit"></i> Edit</button>
+          <button class="action-btn-pill delete" onclick="deleteCoverPage('${c.id}')"><i class="fas fa-trash-alt"></i> Delete</button>
+        </div>
+      </div>
+    </div>
+  `).join("");
+}
+
+window.editCoverPage = function(id) {
+  const covers = getCoverPages();
+  const cover = covers.find(c => c.id === id);
+  if (!cover) return;
+
+  document.getElementById("editCoverPageId").value = cover.id;
+  document.getElementById("coverTitleInput").value = cover.title;
+  document.getElementById("coverBadgeInput").value = cover.badge || "ISSUE EXCLUSIVE";
+  document.getElementById("coverCategorySelect").value = cover.category;
+  document.getElementById("coverAuthorInput").value = cover.author;
+  document.getElementById("coverTierSelect").value = cover.tier || "VIP Exclusive";
+  document.getElementById("coverIsFrontCheckbox").checked = Boolean(cover.isFrontCover);
+  document.getElementById("coverSummaryInput").value = cover.summary || "";
+  document.getElementById("coverQuoteInput").value = cover.quote || "";
+  document.getElementById("coverContentInput").value = cover.content || "";
+
+  uploadedCoverImageData = cover.image || "";
+  const previewWrap = document.getElementById("coverPreviewWrap");
+  const previewImg = document.getElementById("coverPreviewImg");
+  const dropzone = document.getElementById("coverDropzone");
+
+  if (uploadedCoverImageData) {
+    if (previewImg) previewImg.src = uploadedCoverImageData;
+    if (previewWrap) previewWrap.style.display = "block";
+    if (dropzone) dropzone.style.display = "none";
+  } else {
+    if (previewWrap) previewWrap.style.display = "none";
+    if (dropzone) dropzone.style.display = "block";
+  }
+
+  document.getElementById("coverModalTitle").textContent = "Edit Cover Page";
+  document.getElementById("coverModalBadge").textContent = "Live Editor";
+  document.getElementById("coverPageModal").classList.add("active");
+};
+
+window.deleteCoverPage = function(id) {
+  const covers = getCoverPages();
+  const cover = covers.find(c => c.id === id);
+  if (!confirm(`Are you sure you want to delete cover page "${cover ? cover.title : ''}"?`)) return;
+
+  const updated = covers.filter(c => c.id !== id);
+  // If deleted one was front cover and others remain, make first one front cover
+  if (cover && cover.isFrontCover && updated.length > 0) {
+    updated[0].isFrontCover = true;
+  }
+
+  saveCoverPages(updated);
+  showToast("Cover page deleted from dashboard.", "fa-trash");
+};
+
+window.setFrontCover = function(id) {
+  let covers = getCoverPages();
+  covers.forEach(c => {
+    c.isFrontCover = (c.id === id);
+  });
+  saveCoverPages(covers);
+  const active = covers.find(c => c.id === id);
+  showToast(`"${active ? active.title : 'Cover'}" is now the active Front Cover!`, "fa-star");
+};
+
+/* ==========================================================================
+   4. ARTICLES STUDIO (ADD, EDIT, DELETE, SEARCH WITH PHOTO UPLOAD)
    ========================================================================== */
 const DEFAULT_STORIES = [
   {
@@ -277,6 +604,8 @@ function saveCustomArticles(list) {
   renderArticles();
 }
 
+let uploadedArticleImageData = "";
+
 function initArticlesStudio() {
   const modal = document.getElementById("articleModal");
   const openModalBtn = document.getElementById("openNewArticleModalBtn");
@@ -286,11 +615,22 @@ function initArticlesStudio() {
   const saveForm = document.getElementById("saveArticleForm");
   const searchInput = document.getElementById("searchArticlesInput");
 
+  // Article upload elements
+  const dropzone = document.getElementById("articleDropzone");
+  const fileInput = document.getElementById("articleFileInput");
+  const previewWrap = document.getElementById("articlePreviewWrap");
+  const previewImg = document.getElementById("articlePreviewImg");
+  const changeImgBtn = document.getElementById("changeArticleImgBtn");
+  const imageSelect = document.getElementById("articleImageSelect");
+
   function openNewArticleModal() {
     saveForm.reset();
     document.getElementById("editArticleId").value = "";
     document.getElementById("articleModalTitle").textContent = "Create New Story";
     document.getElementById("articleModalBadge").textContent = "Publisher Tool";
+    uploadedArticleImageData = "";
+    if (previewWrap) previewWrap.style.display = "none";
+    if (dropzone) dropzone.style.display = "block";
     modal.classList.add("active");
   }
 
@@ -304,6 +644,46 @@ function initArticlesStudio() {
   if (closeModalBtn) closeModalBtn.addEventListener("click", closeModal);
   if (cancelBtn) cancelBtn.addEventListener("click", closeModal);
 
+  // File upload handlers
+  if (dropzone && fileInput) {
+    dropzone.addEventListener("click", () => fileInput.click());
+    fileInput.addEventListener("change", (e) => {
+      if (e.target.files && e.target.files[0]) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          uploadedArticleImageData = event.target.result;
+          if (previewImg) previewImg.src = uploadedArticleImageData;
+          if (previewWrap) previewWrap.style.display = "block";
+          if (dropzone) dropzone.style.display = "none";
+          if (imageSelect) imageSelect.value = "";
+          showToast("Article photo uploaded!", "fa-check");
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  if (changeImgBtn) {
+    changeImgBtn.addEventListener("click", () => {
+      uploadedArticleImageData = "";
+      if (previewWrap) previewWrap.style.display = "none";
+      if (dropzone) dropzone.style.display = "block";
+      if (fileInput) fileInput.value = "";
+    });
+  }
+
+  if (imageSelect) {
+    imageSelect.addEventListener("change", () => {
+      if (imageSelect.value) {
+        uploadedArticleImageData = imageSelect.value;
+        if (previewImg) previewImg.src = imageSelect.value;
+        if (previewWrap) previewWrap.style.display = "block";
+        if (dropzone) dropzone.style.display = "none";
+      }
+    });
+  }
+
   if (saveForm) {
     saveForm.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -312,10 +692,11 @@ function initArticlesStudio() {
       const category = document.getElementById("articleCategorySelect").value;
       const author = document.getElementById("articleAuthorInput").value.trim();
       const readTime = document.getElementById("articleReadtimeInput").value.trim();
-      const image = document.getElementById("articleImageSelect").value;
       const tier = document.getElementById("articleTierSelect").value;
       const quote = document.getElementById("articleQuoteInput").value.trim();
       const content = document.getElementById("articleContentInput").value.trim();
+
+      const image = uploadedArticleImageData || imageSelect?.value || "images/exclusive.JPG";
 
       const customList = JSON.parse(localStorage.getItem("livegreater_custom_articles") || "[]");
 
@@ -401,10 +782,23 @@ window.editArticle = function(id) {
   document.getElementById("articleCategorySelect").value = article.category;
   document.getElementById("articleAuthorInput").value = article.author;
   document.getElementById("articleReadtimeInput").value = article.readTime || "5 min read";
-  document.getElementById("articleImageSelect").value = article.image || "images/exclusive.JPG";
   document.getElementById("articleTierSelect").value = article.tier || "All Readers";
   document.getElementById("articleQuoteInput").value = article.quote || "";
   document.getElementById("articleContentInput").value = article.content || "";
+
+  uploadedArticleImageData = article.image || "";
+  const previewWrap = document.getElementById("articlePreviewWrap");
+  const previewImg = document.getElementById("articlePreviewImg");
+  const dropzone = document.getElementById("articleDropzone");
+
+  if (uploadedArticleImageData) {
+    if (previewImg) previewImg.src = uploadedArticleImageData;
+    if (previewWrap) previewWrap.style.display = "block";
+    if (dropzone) dropzone.style.display = "none";
+  } else {
+    if (previewWrap) previewWrap.style.display = "none";
+    if (dropzone) dropzone.style.display = "block";
+  }
 
   document.getElementById("articleModalTitle").textContent = "Edit Story";
   document.getElementById("articleModalBadge").textContent = "Live Editor";
@@ -420,8 +814,8 @@ window.deleteArticle = function(id) {
 };
 
 /* ==========================================================================
-   4. MAILING SYSTEM & CLIENT PASSWORD RECORDS
-   ========================================================================== */
+   5. MAILING SYSTEM & CLIENT PASSWORD RECORDS
+   ========================================================================= */
 function initMailingSystem() {
   const broadcastForm = document.getElementById("broadcastEmailForm");
   const exportBtn = document.getElementById("exportCsvBtn");
@@ -570,7 +964,7 @@ function renderSubscribers() {
 window.deleteSubscriber = removeSubscriber;
 
 /* ==========================================================================
-   5. ADMIN PASSWORD MANAGER (LUIGI DERBYSHIRE CONTROLS HIS PASSWORD)
+   6. ADMIN PASSWORD MANAGER (LUIGI DERBYSHIRE CONTROLS HIS PASSWORD)
    ========================================================================== */
 function initPasswordManager() {
   const form = document.getElementById("changeAdminPasswordForm");
@@ -618,18 +1012,21 @@ function initPasswordManager() {
 }
 
 /* ==========================================================================
-   6. METRICS COUNTER
+   7. METRICS COUNTER
    ========================================================================== */
 function updateMetrics() {
   const subs = getSubscribers();
   const articles = getArticles();
+  const covers = getCoverPages();
 
   const subEl = document.getElementById("metricSubscribers");
   const artEl = document.getElementById("metricArticles");
+  const covEl = document.getElementById("metricCovers");
   const accEl = document.getElementById("metricAccounts");
 
   if (subEl) subEl.textContent = subs.length;
   if (artEl) artEl.textContent = articles.length;
+  if (covEl) covEl.textContent = covers.length;
   if (accEl) accEl.textContent = subs.filter(s => s.password).length;
 }
 
