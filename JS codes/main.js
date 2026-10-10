@@ -4,13 +4,147 @@
    ========================================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
+  seedInitialData();
   initSlider();
   initMobileNav();
   initArticleReader();
+  initGatekeeperModal();
+  initArticleInteractions();
+  initHeaderAuth();
   initNewsletter();
   initFloatingWhatsApp();
   initFooterModals();
 });
+
+/* ==========================================================================
+   0. PRE-SEED ESSENTIAL CREDENTIALS & VIP TEST PROFILES
+   ========================================================================== */
+function seedInitialData() {
+  // Master Admin defaults
+  if (!localStorage.getItem("livegreater_admin_password")) {
+    localStorage.setItem("livegreater_admin_password", "LiveGreater#2026");
+  }
+  if (!localStorage.getItem("livegreater_admin_email")) {
+    localStorage.setItem("livegreater_admin_email", "admin@livegreater.com");
+  }
+
+  // Pre-seed VIP Premium User: richeey4@gmail.com with password 1213
+  let accounts = [];
+  try {
+    accounts = JSON.parse(localStorage.getItem("livegreater_member_accounts") || "[]");
+  } catch (err) {
+    accounts = [];
+  }
+
+  const targetEmail = "richeey4@gmail.com";
+  const existingIdx = accounts.findIndex(a => a.email && a.email.toLowerCase() === targetEmail);
+  const premiumUser = {
+    name: "Tshiamo Richeey",
+    email: targetEmail,
+    password: "1213",
+    tier: "VIP Premium Member",
+    status: "Active",
+    date: "2026-02-17"
+  };
+
+  if (existingIdx !== -1) {
+    accounts[existingIdx].password = "1213";
+    accounts[existingIdx].tier = "VIP Premium Member";
+    accounts[existingIdx].name = accounts[existingIdx].name || "Tshiamo Richeey";
+    accounts[existingIdx].status = "Active";
+  } else {
+    accounts.unshift(premiumUser);
+  }
+  localStorage.setItem("livegreater_member_accounts", JSON.stringify(accounts));
+
+  // Ensure added to subscribers
+  let subs = [];
+  try {
+    subs = JSON.parse(localStorage.getItem("livegreater_subscribers") || "[]");
+  } catch (err) {
+    subs = [];
+  }
+  if (!subs.some(s => typeof s === "string" && s.toLowerCase() === targetEmail)) {
+    subs.unshift(targetEmail);
+  }
+  if (!subs.includes("admin@livegreater.com")) subs.push("admin@livegreater.com");
+  if (!subs.includes("luigi@livegreater.com")) subs.push("luigi@livegreater.com");
+  localStorage.setItem("livegreater_subscribers", JSON.stringify(subs));
+}
+
+function getMasterAdminPassword() {
+  return localStorage.getItem("livegreater_admin_password") || "LiveGreater#2026";
+}
+
+function getMasterAdminEmail() {
+  return localStorage.getItem("livegreater_admin_email") || "admin@livegreater.com";
+}
+
+function getAuthUser() {
+  const isAdmin = (localStorage.getItem("livegreater_admin_logged_in") === "true") ||
+                  (sessionStorage.getItem("livegreater_admin_logged_in") === "true");
+
+  let vipUser = null;
+  try {
+    vipUser = JSON.parse(localStorage.getItem("livegreater_vip_user") || sessionStorage.getItem("livegreater_vip_user") || "null");
+  } catch (e) {
+    vipUser = null;
+  }
+
+  if (isAdmin) {
+    return {
+      name: "Luigi Derbyshire",
+      email: "admin@livegreater.com",
+      tier: "Publisher Admin",
+      isAdmin: true,
+      isVip: true
+    };
+  }
+
+  if (vipUser) {
+    return {
+      name: vipUser.name || "VIP Member",
+      email: vipUser.email,
+      tier: vipUser.tier || "VIP Premium Member",
+      isAdmin: false,
+      isVip: true
+    };
+  }
+
+  return null;
+}
+
+function initHeaderAuth() {
+  const isSubfolder = window.location.pathname.includes("/html codes/") || window.location.pathname.includes("/html%20codes/");
+  const vipUrl = isSubfolder ? "../vip.html" : "vip.html";
+  const adminUrl = isSubfolder ? "../admin.html" : "admin.html";
+
+  const vipNavBtn = document.querySelector(".vip-nav-btn");
+  if (!vipNavBtn) return;
+
+  const user = getAuthUser();
+  if (user) {
+    if (user.isAdmin) {
+      vipNavBtn.href = adminUrl;
+      vipNavBtn.innerHTML = `<i class="fas fa-shield-alt"></i> Studio (Admin)`;
+      vipNavBtn.style.background = "rgba(0, 255, 153, 0.15)";
+      vipNavBtn.style.borderColor = "rgba(0, 255, 153, 0.35)";
+      vipNavBtn.style.color = "#00ff99";
+    } else {
+      vipNavBtn.href = vipUrl;
+      vipNavBtn.innerHTML = `<i class="fas fa-crown"></i> VIP: ${user.name}`;
+      vipNavBtn.style.background = "rgba(255, 215, 0, 0.18)";
+      vipNavBtn.style.borderColor = "rgba(255, 215, 0, 0.4)";
+      vipNavBtn.style.color = "#ffd700";
+    }
+  } else {
+    vipNavBtn.href = vipUrl;
+    vipNavBtn.innerHTML = `<i class="fas fa-user-circle"></i> Member Sign In`;
+    vipNavBtn.style.background = "rgba(255, 215, 0, 0.15)";
+    vipNavBtn.style.borderColor = "rgba(255, 215, 0, 0.35)";
+    vipNavBtn.style.color = "#ffd700";
+  }
+}
 
 /* ==========================================================================
    1. RESPONSIVE SLIDER SYSTEM
@@ -204,7 +338,7 @@ function initMobileNav() {
 }
 
 /* ==========================================================================
-   3. ARTICLE READER MODAL
+   3. ARTICLE READER MODAL & ARTICLES DATABASE
    ========================================================================== */
 const ARTICLES_DATABASE = {
   "exclusive": {
@@ -324,6 +458,10 @@ function initArticleReader() {
         <button class="modal-close" aria-label="Close reader">&times;</button>
         <img class="modal-hero" src="" alt="Article feature">
         <div class="modal-body">
+          <div id="modalVipUnlockedBanner" style="display: none;" class="vip-unlocked-banner">
+            <i class="fas fa-crown"></i>
+            <span id="modalVipUnlockedText">Exclusive VIP Feature • Unlocked</span>
+          </div>
           <div class="article-meta">
             <span class="article-category">Feature</span>
             <span class="article-readtime"><i class="far fa-clock"></i> 5 min read</span>
@@ -344,8 +482,10 @@ function initArticleReader() {
   const titleEl = modal.querySelector("h2");
   const bylineEl = modal.querySelector(".article-byline");
   const textEl = modal.querySelector(".article-text");
+  const vipBanner = modal.querySelector("#modalVipUnlockedBanner");
+  const vipBannerText = modal.querySelector("#modalVipUnlockedText");
 
-  window.openArticleModal = function(key, customData = null) {
+  window.openArticleModal = function(key, customData = null, isExclusive = false) {
     const data = customData || ARTICLES_DATABASE[key] || ARTICLES_DATABASE["exclusive"];
     const isSubfolder = window.location.pathname.includes("/html codes/") || window.location.pathname.includes("/html%20codes/");
 
@@ -359,6 +499,15 @@ function initArticleReader() {
     readtimeSpan.innerHTML = `<i class="far fa-clock"></i> ${data.readTime || "5 min read"}`;
     titleEl.textContent = data.title;
     bylineEl.textContent = data.author || "By LiveGreater Editorial";
+
+    if (isExclusive) {
+      const user = getAuthUser();
+      const userName = user ? user.name : "VIP Member";
+      vipBanner.style.display = "flex";
+      vipBannerText.textContent = `Exclusive VIP Feature • Unlocked for ${userName}`;
+    } else {
+      vipBanner.style.display = "none";
+    }
 
     let bodyHTML = "";
     if (data.quote) {
@@ -391,48 +540,216 @@ function initArticleReader() {
       closeModal();
     }
   });
+}
 
-  document.querySelectorAll(".exclusive button, .primary-btn, button[onclick*='location']").forEach(btn => {
+/* ==========================================================================
+   4. VIP GATEKEEPER MODAL FOR BIG EXCLUSIVE ARTICLES
+   ========================================================================== */
+let pendingExclusiveKey = "exclusive";
+
+function initGatekeeperModal() {
+  let modal = document.getElementById("exclusiveGatekeeperModal");
+  if (modal) return;
+
+  const isSubfolder = window.location.pathname.includes("/html codes/") || window.location.pathname.includes("/html%20codes/");
+  const vipPageUrl = isSubfolder ? "../vip.html" : "vip.html";
+
+  modal = document.createElement("div");
+  modal.id = "exclusiveGatekeeperModal";
+  modal.className = "modal-overlay";
+  modal.innerHTML = `
+    <div class="modal-dialog gatekeeper-dialog">
+      <button class="modal-close" id="gatekeeperModalCloseBtn" aria-label="Close gatekeeper">&times;</button>
+      <div class="modal-body" style="padding: 36px 30px 40px; text-align: center;">
+        <div style="width: 68px; height: 68px; margin: 0 auto 16px; border-radius: 50%; background: rgba(255, 215, 0, 0.15); border: 2px solid rgba(255, 215, 0, 0.35); display: flex; align-items: center; justify-content: center; font-size: 1.85rem; color: #ffd700;">
+          <i class="fas fa-crown"></i>
+        </div>
+        <div class="vip-exclusive-badge" style="margin-bottom: 12px;">Exclusive VIP Story</div>
+        <h3 style="font-family: var(--font-heading); font-size: 1.65rem; margin-bottom: 10px; color: #fff;">Members Only Feature</h3>
+        <p style="color: rgba(255, 255, 255, 0.75); font-size: 0.94rem; line-height: 1.6; margin-bottom: 24px;">
+          Our lead cover features are reserved exclusively for <strong>LiveGreater VIP & Premium members</strong>. Sign in below to unlock this story immediately.
+        </p>
+
+        <form id="gatekeeperFastLoginForm" style="text-align: left; display: flex; flex-direction: column; gap: 14px;">
+          <div>
+            <label style="font-size: 0.8rem; color: rgba(255,255,255,0.7); display: block; margin-bottom: 6px;">
+              <i class="fas fa-envelope" style="color: #ffd700; margin-right: 6px;"></i> Account Email
+            </label>
+            <input type="email" id="gatekeeperEmailInput" placeholder="richeey4@gmail.com" required style="width: 100%; padding: 12px 14px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; color: #fff; font-size: 0.95rem; outline: none; box-sizing: border-box;">
+          </div>
+          <div>
+            <label style="font-size: 0.8rem; color: rgba(255,255,255,0.7); display: block; margin-bottom: 6px;">
+              <i class="fas fa-lock" style="color: #ffd700; margin-right: 6px;"></i> Password
+            </label>
+            <input type="password" id="gatekeeperPasswordInput" placeholder="Enter password (e.g. 1213)" required style="width: 100%; padding: 12px 14px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.18); border-radius: 10px; color: #fff; font-size: 0.95rem; outline: none; box-sizing: border-box;">
+          </div>
+          <button type="submit" class="primary-btn" style="width: 100%; justify-content: center; background: #ffd700; color: #181203; font-weight: 700; margin-top: 6px; padding: 13px; cursor: pointer; border: none; border-radius: 30px;">
+            <i class="fas fa-unlock"></i> Unlock & Read Article
+          </button>
+        </form>
+
+        <div style="margin-top: 18px; padding: 10px 14px; background: rgba(255, 215, 0, 0.08); border: 1px dashed rgba(255, 215, 0, 0.25); border-radius: 10px; font-size: 0.82rem; color: rgba(255, 255, 255, 0.75);">
+          <span style="color: #ffd700; font-weight: 600;"><i class="fas fa-key"></i> VIP Test Member:</span> <code>richeey4@gmail.com</code> | Pass: <code>1213</code>
+        </div>
+
+        <div style="margin-top: 20px; font-size: 0.88rem; color: rgba(255,255,255,0.65);">
+          Need an account? <a href="${vipPageUrl}" style="color: #ffd700; font-weight: 600; text-decoration: underline;">Join the VIP Circle</a>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  const closeBtn = modal.querySelector("#gatekeeperModalCloseBtn");
+  const loginForm = modal.querySelector("#gatekeeperFastLoginForm");
+
+  function closeGatekeeper() {
+    modal.classList.remove("active");
+    document.body.style.overflow = "";
+  }
+
+  closeBtn.addEventListener("click", closeGatekeeper);
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeGatekeeper();
+  });
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("active")) {
+      closeGatekeeper();
+    }
+  });
+
+  loginForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = document.getElementById("gatekeeperEmailInput").value.trim().toLowerCase();
+    const password = document.getElementById("gatekeeperPasswordInput").value.trim();
+
+    const masterPass = getMasterAdminPassword();
+    const masterEmail = getMasterAdminEmail().toLowerCase();
+
+    // 1. Check if Admin logging in
+    const isAdminEmail = (email === masterEmail || email === "admin@livegreater.com" || email === "luigi@livegreater.com" || email.startsWith("admin@"));
+    const isAdminPass = (password === masterPass || password === "LiveGreater#2026" || password === "luigi2026");
+
+    if (isAdminEmail && isAdminPass) {
+      localStorage.setItem("livegreater_admin_logged_in", "true");
+      sessionStorage.setItem("livegreater_admin_logged_in", "true");
+      const adminUser = {
+        name: "Luigi Derbyshire",
+        email: "admin@livegreater.com",
+        tier: "Publisher Admin",
+        role: "admin",
+        status: "Active"
+      };
+      localStorage.setItem("livegreater_vip_user", JSON.stringify(adminUser));
+      sessionStorage.setItem("livegreater_vip_user", JSON.stringify(adminUser));
+
+      closeGatekeeper();
+      initHeaderAuth();
+      showToast("Master Access Verified! Exclusive Article Unlocked.", "fa-crown");
+      if (typeof window.openArticleModal === "function") {
+        window.openArticleModal(pendingExclusiveKey, null, true);
+      }
+      return;
+    }
+
+    // 2. Check VIP / Subscriber account
+    const accounts = JSON.parse(localStorage.getItem("livegreater_member_accounts") || "[]");
+    const user = accounts.find(a => a.email && a.email.toLowerCase() === email);
+
+    if (user) {
+      if (user.password && user.password !== password) {
+        showToast("Incorrect password for " + email, "fa-exclamation-triangle");
+        return;
+      }
+      localStorage.setItem("livegreater_vip_user", JSON.stringify(user));
+      sessionStorage.setItem("livegreater_vip_user", JSON.stringify(user));
+
+      closeGatekeeper();
+      initHeaderAuth();
+      showToast(`VIP Access Verified! Welcome, ${user.name}.`, "fa-crown");
+      if (typeof window.openArticleModal === "function") {
+        window.openArticleModal(pendingExclusiveKey, null, true);
+      }
+    } else {
+      showToast("Account not found. Please verify email or join VIP Circle.", "fa-exclamation-triangle");
+    }
+  });
+
+  window.openGatekeeperModal = function(storyKey) {
+    pendingExclusiveKey = storyKey || "exclusive";
+    modal.classList.add("active");
+    document.body.style.overflow = "hidden";
+  };
+}
+
+/* ==========================================================================
+   5. ARTICLE INTERACTION HANDLER:
+      - BIG ARTICLE (EXCLUSIVE) -> GATED FOR VIP & ADMIN ONLY
+      - BOTTOM SLIDESHOW CARDS -> PUBLIC & OPEN TO ANY PERSON
+   ========================================================================== */
+function initArticleInteractions() {
+  function getPageStoryKey() {
+    const pagePath = window.location.pathname.toLowerCase();
+    if (pagePath.includes("sport")) return "mohale";
+    if (pagePath.includes("health")) return "health";
+    if (pagePath.includes("insp")) return "inspiration";
+    if (pagePath.includes("entrepreneur")) return "entrepreneurship";
+    if (pagePath.includes("lifestyle")) return "lifestyle";
+    if (pagePath.includes("fashion")) return "fashion";
+    if (pagePath.includes("influence")) return "influence";
+    return "exclusive";
+  }
+
+  // 1. BIG EXCLUSIVE ARTICLES (Gated for VIP / Admin)
+  document.querySelectorAll(".exclusive button, .exclusive .primary-btn").forEach(btn => {
     if (btn.classList.contains("open-article-btn")) return;
     btn.removeAttribute("onclick");
     btn.addEventListener("click", (e) => {
       e.preventDefault();
-      const pagePath = window.location.pathname.toLowerCase();
-      if (pagePath.includes("sport")) window.openArticleModal("mohale");
-      else if (pagePath.includes("health")) window.openArticleModal("health");
-      else if (pagePath.includes("insp")) window.openArticleModal("inspiration");
-      else if (pagePath.includes("entrepreneur")) window.openArticleModal("entrepreneurship");
-      else if (pagePath.includes("lifestyle")) window.openArticleModal("lifestyle");
-      else if (pagePath.includes("fashion")) window.openArticleModal("fashion");
-      else if (pagePath.includes("influence")) window.openArticleModal("influence");
-      else window.openArticleModal("exclusive");
+      const storyKey = getPageStoryKey();
+      const user = getAuthUser();
+
+      if (user) {
+        // Authenticated VIP member or Admin -> open full story immediately
+        if (typeof window.openArticleModal === "function") {
+          window.openArticleModal(storyKey, null, true);
+        }
+      } else {
+        // Unauthenticated guest -> trigger VIP gatekeeper modal
+        if (typeof window.openGatekeeperModal === "function") {
+          window.openGatekeeperModal(storyKey);
+        }
+      }
     });
   });
 
-  document.querySelectorAll(".card").forEach((card) => {
+  // 2. BOTTOM SLIDE SHOW CARDS (Open to ANY PERSON freely)
+  document.querySelectorAll(".slider-section .card, .card").forEach((card) => {
     card.addEventListener("click", () => {
       const cardTitle = card.querySelector("h4")?.textContent || "Story";
       const cardDesc = card.querySelector("p")?.textContent || "";
       const cardImg = card.querySelector("img")?.getAttribute("src") || "";
 
-      window.openArticleModal(null, {
-        category: "Magazine Issue",
-        title: cardTitle,
-        author: "LiveGreater Editorial • Luigi Derbyshire",
-        readTime: "4 min read",
-        image: cardImg,
-        quote: cardDesc,
-        paragraphs: [
-          `This story explores the core dynamics of ${cardTitle.toLowerCase()} — examining how elite visionaries cultivate daily mastery and stay ahead of culture.`,
-          `${cardDesc} Stay ahead, with LiveGreater Magazine. Explore the full catalog by visiting our dedicated VIP Lounge.`
-        ]
-      });
+      if (typeof window.openArticleModal === "function") {
+        window.openArticleModal(null, {
+          category: "Magazine Issue",
+          title: cardTitle,
+          author: "LiveGreater Editorial • Luigi Derbyshire",
+          readTime: "4 min read",
+          image: cardImg,
+          quote: cardDesc,
+          paragraphs: [
+            `This story explores the core dynamics of ${cardTitle.toLowerCase()} — examining how elite visionaries cultivate daily mastery and stay ahead of culture.`,
+            `${cardDesc} Stay ahead, with LiveGreater Magazine. Explore the full catalog by visiting our dedicated VIP Lounge.`
+          ]
+        }, false); // isExclusive = false -> public for anyone
+      }
     });
   });
 }
 
 /* ==========================================================================
-   4. NEWSLETTER SUBSCRIPTION (AUTO-ENROLLS INTO MAILING SYSTEM)
+   6. NEWSLETTER SUBSCRIPTION (AUTO-ENROLLS INTO MAILING SYSTEM)
    ========================================================================== */
 function initNewsletter() {
   const form = document.getElementById("newsletterForm");
@@ -440,7 +757,7 @@ function initNewsletter() {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
       const input = form.querySelector("input[type='email']");
-      const email = input.value.trim();
+      const email = input.value.trim().toLowerCase();
       if (!email) return;
 
       const subscribers = JSON.parse(localStorage.getItem("livegreater_subscribers") || "[]");
@@ -451,10 +768,11 @@ function initNewsletter() {
 
       // Also save to member accounts list
       const accounts = JSON.parse(localStorage.getItem("livegreater_member_accounts") || "[]");
-      if (!accounts.some(a => a.email.toLowerCase() === email.toLowerCase())) {
+      if (!accounts.some(a => a.email && a.email.toLowerCase() === email)) {
         accounts.push({
           name: email.split("@")[0],
           email: email,
+          password: "VIP#" + Math.floor(1000 + Math.random() * 9000),
           tier: "VIP Circle",
           status: "Active",
           date: new Date().toISOString().slice(0, 10)
@@ -469,7 +787,7 @@ function initNewsletter() {
 }
 
 /* ==========================================================================
-   5. FLOATING WHATSAPP BUTTON (0630280064)
+   7. FLOATING WHATSAPP BUTTON (0630280064)
    ========================================================================== */
 function initFloatingWhatsApp() {
   if (document.querySelector(".whatsapp-float")) return;
@@ -485,7 +803,7 @@ function initFloatingWhatsApp() {
 }
 
 /* ==========================================================================
-   6. FOOTER MODALS (About Us / Contact Us)
+   8. FOOTER MODALS (About Us / Contact Us)
    ========================================================================== */
 function initFooterModals() {
   document.querySelectorAll("footer .footer-links a").forEach(link => {
@@ -558,7 +876,7 @@ function initFooterModals() {
 }
 
 /* ==========================================================================
-   7. TOAST NOTIFICATION UTILITY
+   9. TOAST NOTIFICATION UTILITY
    ========================================================================== */
 function showToast(message, iconClass = "fa-check-circle") {
   let toast = document.querySelector(".toast");

@@ -4,6 +4,7 @@
    ========================================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
+  seedInitialData();
   initAdminAuth();
   initAdminTabs();
   initArticlesStudio();
@@ -23,13 +24,68 @@ function getMasterEmail() {
   return localStorage.getItem("livegreater_admin_email") || "admin@livegreater.com";
 }
 
+function seedInitialData() {
+  // 1. Ensure master admin credentials initialized
+  if (!localStorage.getItem("livegreater_admin_password")) {
+    localStorage.setItem("livegreater_admin_password", "LiveGreater#2026");
+  }
+  if (!localStorage.getItem("livegreater_admin_email")) {
+    localStorage.setItem("livegreater_admin_email", "admin@livegreater.com");
+  }
+
+  // 2. Ensure rich test VIP account richeey4@gmail.com with password 1213 is seeded
+  let accounts = [];
+  try {
+    accounts = JSON.parse(localStorage.getItem("livegreater_member_accounts") || "[]");
+  } catch (err) {
+    accounts = [];
+  }
+
+  const targetEmail = "richeey4@gmail.com";
+  const existingIdx = accounts.findIndex(a => a.email && a.email.toLowerCase() === targetEmail);
+  const premiumUser = {
+    name: "Tshiamo Richeey",
+    email: targetEmail,
+    password: "1213",
+    tier: "VIP Premium Member",
+    status: "Active",
+    date: "2026-02-17"
+  };
+
+  if (existingIdx !== -1) {
+    accounts[existingIdx].password = "1213";
+    accounts[existingIdx].tier = "VIP Premium Member";
+    accounts[existingIdx].name = accounts[existingIdx].name || "Tshiamo Richeey";
+    accounts[existingIdx].status = "Active";
+  } else {
+    accounts.unshift(premiumUser);
+  }
+  localStorage.setItem("livegreater_member_accounts", JSON.stringify(accounts));
+
+  // 3. Ensure mailing system subscriber list has target accounts
+  let subs = [];
+  try {
+    subs = JSON.parse(localStorage.getItem("livegreater_subscribers") || "[]");
+  } catch (err) {
+    subs = [];
+  }
+  if (!subs.some(s => typeof s === "string" && s.toLowerCase() === targetEmail)) {
+    subs.unshift(targetEmail);
+  }
+  if (!subs.includes("admin@livegreater.com")) subs.push("admin@livegreater.com");
+  if (!subs.includes("luigi@livegreater.com")) subs.push("luigi@livegreater.com");
+  localStorage.setItem("livegreater_subscribers", JSON.stringify(subs));
+}
+
 function initAdminAuth() {
   const authModal = document.getElementById("adminAuthModal");
   const mainContainer = document.getElementById("adminMainContainer");
   const loginForm = document.getElementById("adminLoginForm");
   const logoutBtn = document.getElementById("adminLogoutBtn");
 
-  const isLoggedIn = sessionStorage.getItem("livegreater_admin_logged_in") === "true";
+  // Check login state across both localStorage and sessionStorage
+  const isLoggedIn = (localStorage.getItem("livegreater_admin_logged_in") === "true") ||
+                     (sessionStorage.getItem("livegreater_admin_logged_in") === "true");
 
   if (isLoggedIn) {
     showDashboard();
@@ -46,10 +102,24 @@ function initAdminAuth() {
       const masterPass = getMasterPassword();
       const masterEmail = getMasterEmail().toLowerCase();
 
-      // Check credentials (supports master pass or legacy luigi2026)
-      if ((email === masterEmail || email === "luigi@livegreater.com" || email.includes("admin")) &&
-          (pass === masterPass || pass === "luigi2026" || pass === "LiveGreater#2026")) {
+      // Check credentials (supports master pass, LiveGreater#2026, or legacy luigi2026)
+      const isEmailValid = (email === masterEmail || email === "admin@livegreater.com" || email === "luigi@livegreater.com" || email.includes("admin"));
+      const isPassValid = (pass === masterPass || pass === "LiveGreater#2026" || pass === "luigi2026");
+
+      if (isEmailValid && isPassValid) {
+        localStorage.setItem("livegreater_admin_logged_in", "true");
         sessionStorage.setItem("livegreater_admin_logged_in", "true");
+
+        const adminUser = {
+          name: "Luigi Derbyshire",
+          email: "admin@livegreater.com",
+          tier: "Publisher Admin",
+          role: "admin",
+          status: "Active"
+        };
+        localStorage.setItem("livegreater_vip_user", JSON.stringify(adminUser));
+        sessionStorage.setItem("livegreater_vip_user", JSON.stringify(adminUser));
+
         showDashboard();
         showToast("Welcome back, Luigi Derbyshire!", "fa-check-circle");
       } else {
@@ -60,7 +130,10 @@ function initAdminAuth() {
 
   if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
+      localStorage.removeItem("livegreater_admin_logged_in");
       sessionStorage.removeItem("livegreater_admin_logged_in");
+      localStorage.removeItem("livegreater_vip_user");
+      sessionStorage.removeItem("livegreater_vip_user");
       showLoginModal();
       showToast("Signed out of Admin Studio.", "fa-info-circle");
     });
@@ -403,7 +476,7 @@ function getSubscribers() {
 
   const combined = [...structured];
   simpleList.forEach(email => {
-    if (!combined.some(c => c.email.toLowerCase() === email.toLowerCase())) {
+    if (!combined.some(c => c.email && c.email.toLowerCase() === email.toLowerCase())) {
       combined.push({
         name: email.split("@")[0],
         email: email,
@@ -420,7 +493,7 @@ function getSubscribers() {
 
 function addSubscriberWithPassword(name, email, password, tier = "VIP Circle") {
   const accounts = JSON.parse(localStorage.getItem("livegreater_member_accounts") || "[]");
-  const idx = accounts.findIndex(a => a.email.toLowerCase() === email.toLowerCase());
+  const idx = accounts.findIndex(a => a.email && a.email.toLowerCase() === email.toLowerCase());
 
   const rec = {
     name,
@@ -450,7 +523,7 @@ function removeSubscriber(email) {
   if (!confirm(`Remove ${email} from subscriber database?`)) return;
 
   let accounts = JSON.parse(localStorage.getItem("livegreater_member_accounts") || "[]");
-  accounts = accounts.filter(a => a.email.toLowerCase() !== email.toLowerCase());
+  accounts = accounts.filter(a => a.email && a.email.toLowerCase() !== email.toLowerCase());
   localStorage.setItem("livegreater_member_accounts", JSON.stringify(accounts));
 
   let simple = JSON.parse(localStorage.getItem("livegreater_subscribers") || "[]");
