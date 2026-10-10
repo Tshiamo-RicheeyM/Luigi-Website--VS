@@ -429,13 +429,13 @@
   </div>
 </div>
 
-<!-- MODAL: ADD / EDIT ARTICLE -->
+<!-- MODAL: ADD / EDIT ARTICLE (RICH ONLINE MAGAZINE BUILDER) -->
 <div id="articleModal" class="modal-overlay">
-  <div class="modal-dialog">
+  <div class="modal-dialog" style="max-width: 880px;">
     <button class="modal-close" id="closeArticleModalBtn">&times;</button>
     <div class="modal-body">
       <span class="article-category" id="articleModalBadge">Publisher Tool</span>
-      <h2 id="articleModalTitle" style="margin-top: 8px;">Create New Story</h2>
+      <h2 id="articleModalTitle" style="margin-top: 8px;">Create New Magazine Story</h2>
       
       <form id="saveArticleForm" style="margin-top: 20px;">
         <input type="hidden" id="editArticleId">
@@ -469,57 +469,88 @@
           </div>
         </div>
 
-        <!-- STORY COVER IMAGE UPLOAD / PREVIEW -->
+        <!-- MAGAZINE READING LAYOUT SELECTOR -->
+        <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+          <div class="form-group" style="flex: 2;">
+            <label><i class="fas fa-th-large" style="color: #ffd700;"></i> Magazine Reading Layout</label>
+            <select id="articleLayoutSelect">
+              <option value="editorial-spread">Editorial Magazine Spread (Full-Width Photo Chapters)</option>
+              <option value="two-column">Two-Column Magazine Spread (Side-by-Side Text & Photos)</option>
+              <option value="alternating">Classic Print Magazine (Alternating Floated Photos & Wrapped Text)</option>
+              <option value="photojournalism">Photojournalism Feature (Centered Captioned Photo Cards)</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label>VIP Access Tier</label>
+            <select id="articleTierSelect">
+              <option value="All Readers">All Readers (Public)</option>
+              <option value="VIP Exclusive">VIP Subscribers Only</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- STORY HERO COVER IMAGE UPLOAD / PREVIEW -->
         <div class="form-group">
-          <label><i class="fas fa-image" style="color: #ffd700;"></i> Story Cover Image (Upload or Pick)</label>
+          <label><i class="fas fa-image" style="color: #ffd700;"></i> Hero Cover Photo (Lead Artwork at Top)</label>
           <div class="upload-dropzone" id="articleDropzone" style="padding: 16px;">
             <i class="fas fa-cloud-upload-alt" style="font-size: 1.8rem;"></i>
-            <p style="font-size: 0.9rem; margin: 4px 0;"><strong>Upload cover photo from computer</strong> or browse</p>
+            <p style="font-size: 0.9rem; margin: 4px 0;"><strong>Upload hero cover photo from computer</strong> or browse</p>
             <input type="file" id="articleFileInput" accept="image/*" style="display: none;">
           </div>
           <div id="articlePreviewWrap" style="display: none; margin-top: 10px; position: relative;">
-            <img id="articlePreviewImg" src="" alt="Article cover preview" style="width: 100%; max-height: 180px; object-fit: cover; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2);">
+            <img id="articlePreviewImg" src="" alt="Article cover preview" style="width: 100%; max-height: 200px; object-fit: cover; border-radius: 10px; border: 1px solid rgba(255,215,0,0.3);">
             <button type="button" id="changeArticleImgBtn" class="btn-danger" style="position: absolute; top: 8px; right: 8px; padding: 4px 10px; font-size: 0.75rem;">
               <i class="fas fa-redo"></i> Change Photo
             </button>
           </div>
-          <div style="display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px;">
-            <div class="form-group" style="flex: 2; margin-bottom: 0;">
-              <select id="articleImageSelect">
-                <option value="">-- Choose from preset images or keep uploaded --</option>
-                <option value="images/exclusive.JPG">images/exclusive.JPG (Exclusive Feature)</option>
-                <option value="images/insp1.JPG">images/insp1.JPG (Inspiration)</option>
-                <option value="images/health.JPG">images/health.JPG (Health & Wellness)</option>
-                <option value="images/sport.JPG">images/sport.JPG (Sports & Mohale)</option>
-                <option value="images/entrepreneur.JPG">images/entrepreneur.JPG (Entrepreneurship)</option>
-                <option value="images/fashion.JPG">images/fashion.JPG (Fashion & Art)</option>
-                <option value="images/influence.JPG">images/influence.JPG (Influence)</option>
-                <option value="images/travel.JPG">images/travel.JPG (Travel & Lifestyle)</option>
-                <option value="images/fitness.JPG">images/fitness.JPG (Fitness Training)</option>
-              </select>
-            </div>
-            <div class="form-group" style="flex: 1; margin-bottom: 0;">
-              <select id="articleTierSelect">
-                <option value="All Readers">All Readers (Public)</option>
-                <option value="VIP Exclusive">VIP Subscribers Only</option>
-              </select>
-            </div>
+          <div style="margin-top: 10px;">
+            <select id="articleImageSelect">
+              <option value="">-- Or choose from existing presets --</option>
+              <option value="images/exclusive.JPG">images/exclusive.JPG (Exclusive Feature)</option>
+              <option value="images/insp1.JPG">images/insp1.JPG (Inspiration)</option>
+              <option value="images/health.JPG">images/health.JPG (Health & Wellness)</option>
+              <option value="images/sport.JPG">images/sport.JPG (Sports & Mohale)</option>
+              <option value="images/entrepreneur.JPG">images/entrepreneur.JPG (Entrepreneurship)</option>
+              <option value="images/fashion.JPG">images/fashion.JPG (Fashion & Art)</option>
+              <option value="images/influence.JPG">images/influence.JPG (Influence)</option>
+              <option value="images/travel.JPG">images/travel.JPG (Travel & Lifestyle)</option>
+              <option value="images/fitness.JPG">images/fitness.JPG (Fitness Training)</option>
+            </select>
           </div>
         </div>
 
         <div class="form-group">
-          <label>Pull Quote / Tagline</label>
-          <input type="text" id="articleQuoteInput" placeholder="A memorable, bold statement from the feature...">
+          <label>Pull Quote / Tagline (Optional)</label>
+          <input type="text" id="articleQuoteInput" placeholder="A memorable, bold statement featured at the top...">
         </div>
 
-        <div class="form-group">
-          <label>Story Content (Paragraphs)</label>
-          <textarea id="articleContentInput" rows="6" placeholder="Write full editorial article body here..." required></textarea>
+        <!-- DYNAMIC SECTIONS & INLINE IMAGES BUILDER (PARAGRAPH 1 + IMAGE 1, PARAGRAPH 2 + IMAGE 2...) -->
+        <div class="article-builder-wrapper">
+          <div class="builder-header">
+            <div>
+              <h4><i class="fas fa-layer-group" style="color: #ffd700;"></i> Magazine Story Sections & Inline Photos</h4>
+              <p style="font-size: 0.82rem; color: var(--text-muted); margin: 0;">
+                Assign where each image appears as the reader scrolls: Paragraph 1 + Image 1, Paragraph 2 + Image 2, etc. (No limit!).
+              </p>
+            </div>
+            <button type="button" id="addSectionTopBtn" class="primary-btn" style="padding: 7px 15px; font-size: 0.82rem;">
+              <i class="fas fa-plus"></i> Add Section
+            </button>
+          </div>
+
+          <!-- REPEATER CONTAINER -->
+          <div id="articleSectionsContainer" class="article-sections-list">
+            <!-- Dynamically populated section cards -->
+          </div>
+
+          <button type="button" id="addSectionBottomBtn" class="btn-secondary" style="width: 100%; justify-content: center; margin-top: 16px; border: 2px dashed rgba(255,215,0,0.35); color: #ffd700; padding: 12px; font-weight: 600;">
+            <i class="fas fa-plus-circle"></i> Add Next Section (Paragraph + Inline Image)
+          </button>
         </div>
 
         <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
           <button type="button" class="btn-secondary" id="cancelArticleBtn">Cancel</button>
-          <button type="submit" class="primary-btn"><i class="fas fa-save"></i> Save & Publish Article</button>
+          <button type="submit" class="primary-btn"><i class="fas fa-save"></i> Save & Publish Magazine Story</button>
         </div>
       </form>
     </div>

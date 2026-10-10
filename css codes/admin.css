@@ -791,3 +791,106 @@
   color: var(--text-muted);
 }
 
+/* ==========================================================================
+   ARTICLE SECTIONS BUILDER (Image 1, Paragraph 1, Image 2, Paragraph 2...)
+   ========================================================================== */
+.article-builder-wrapper {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 22px;
+  margin: 22px 0;
+}
+
+.builder-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.builder-header h4 {
+  font-size: 1.15rem;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.article-sections-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.article-section-card {
+  background: rgba(18, 15, 32, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 20px;
+  transition: var(--transition-smooth);
+  position: relative;
+}
+
+.article-section-card:hover {
+  border-color: rgba(255, 215, 0, 0.35);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.section-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.section-card-badge {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #ffd700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.btn-remove-section {
+  background: rgba(255, 51, 68, 0.15);
+  border: 1px solid rgba(255, 51, 68, 0.3);
+  color: #ff3344;
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-remove-section:hover {
+  background: #ff3344;
+  color: #fff;
+}
+
+.section-image-block {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 14px;
+}
+
+.section-thumb-preview {
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  display: block;
+}
+
+
